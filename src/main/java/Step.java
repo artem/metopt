@@ -1,0 +1,10 @@
+public class Step {
+    final double x1, x2, f1, f2;
+
+    public Step(double x1, double x2, double f1, double f2) {
+        this.x1 = x1;
+        this.x2 = x2;
+        this.f1 = f1;
+        this.f2 = f2;
+    }
+}
