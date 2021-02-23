@@ -1,0 +1,7 @@
+# IDEA and Gradle files
+.idea
+.gradle
+build
+
+# KDE Plasma garbage
+.directory
