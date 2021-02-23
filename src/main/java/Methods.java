@@ -1,6 +1,6 @@
 public class Methods {
 
-    public static Result goldenRatio(Function fun, double from, double to, double epsLim) {
+    public static Result goldenRatio(AbstractFunction fun, double from, double to, double epsLim) {
         final Result res = new Result();
         final double Tau = (Math.sqrt(5) - 1) / 2;
         double[] x = new double[]{from + (1 - Tau) * (to - from), from + Tau * (to - from)};
