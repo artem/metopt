@@ -23,6 +23,15 @@ public class Demo {
             case 1:
                 res = Methods.goldenRatio(new FunVar2(),  eps);
                 break;
+            case 2:
+                res = Methods.parabola(new FunVar2(),  eps);
+                break;
+            case 3:
+                res = Methods.brent(new FunVar2(),  eps);
+                break;
+            case 4:
+                res = Methods.fib(new FunVar2(),  eps);
+                break;
             default:
                 System.out.println("Wrong arguments");
                 return;

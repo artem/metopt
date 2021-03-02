@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 methods = ["Метод дихотомии",
            "Метод золотого сечения",
@@ -8,7 +9,7 @@ methods = ["Метод дихотомии",
 
 
 def function(x):
-    return pow(x, 4) - 1.5 * math.atan(x)
+    return np.power(x, 4) - 1.5 * np.arctan(x)
 
 
 jar_path = "metopt-0.1.jar"
