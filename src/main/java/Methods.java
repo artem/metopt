@@ -1,6 +1,8 @@
 public class Methods {
 
-    public static Result goldenRatio(AbstractFunction fun, double from, double to, double epsLim) {
+    public static Result goldenRatio(AbstractFunction fun, double epsLim) {
+        double from = fun.l;
+        double to = fun.r;
         final Result res = new Result();
         final double Tau = (Math.sqrt(5) - 1) / 2;
         double I = (to - from) * Tau;
@@ -22,7 +24,9 @@ public class Methods {
         return res;
     }
 
-    public static Result dichotomy(AbstractFunction fun, double from, double to, double epsLim) {
+    public static Result dichotomy(AbstractFunction fun, double epsLim) {
+        double from = fun.l;
+        double to = fun.r;
         final Result res = new Result();
         double d = (to-from)/3;
         double[] x = new double[]{(from + to - d) / 2, (from + to + d) / 2};
@@ -42,8 +46,17 @@ public class Methods {
         return res;
     }
 
+    public static Result parabola(AbstractFunction fun, double epsLim) {
+        double from = fun.l;
+        double to = fun.r;
+        final Result res = new Result();
+
+        return res;
+    }
+
+
     public static void main(String[] args) {
-        System.out.println(Methods.goldenRatio(new FunVar2(), -1, 1, 1e-15));
-        System.out.println(Methods.dichotomy(new FunVar2(), -1, 1, 1e-15));
+        System.out.println(Methods.goldenRatio(new FunVar2(), 1e-15));
+        System.out.println(Methods.dichotomy(new FunVar2(), 1e-15));
     }
 }
