@@ -11,7 +11,7 @@ def function(x):
     return pow(x, 4) - 1.5 * math.atan(x)
 
 
-jar_path = "Demo.jar"
+jar_path = "metopt-0.1.jar"
 
 input_mosk = """0.6426359073705743
 -0.6862181514405017
