@@ -38,7 +38,7 @@ public class Demo {
         }
         System.out.println(res.x);
         System.out.println(res.f);
-        for (Step i : res.steps) {
+        for (ResultPart i : res.steps) {
             System.out.println(i);
         }
     }
