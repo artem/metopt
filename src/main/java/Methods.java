@@ -133,6 +133,7 @@ public class Methods {
         return res;
     }
 
+
     public static Result brent(AbstractFunction fun, double epsLim) {
         final Result res = new Result();
 
