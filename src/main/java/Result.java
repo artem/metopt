@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Result {
-    List<Step> steps = new ArrayList<>();
+    List<ResultPart> steps = new ArrayList<>();
     double x;
     double f;
 
@@ -10,7 +10,7 @@ public class Result {
         steps.add(new Step(x1, x2, f1, f2));
     }
 
-    public void addStep(Step step) {
+    public void addStep(ResultPart step) {
         steps.add(step);
     }
 
