@@ -16,10 +16,10 @@ public class Demo {
         Result res;
         switch (num) {
             case 0:
-                res = Methods.dichotomy(new FunVar2(), -1, 1, 0.00001);
+                res = Methods.dichotomy(new FunVar2(), 1e-10);
                 break;
             case 1:
-                res = Methods.goldenRatio(new FunVar2(), -1, 1, 0.00001);
+                res = Methods.goldenRatio(new FunVar2(), 1e-10);
                 break;
             default:
                 System.out.println("Wrong argument");
