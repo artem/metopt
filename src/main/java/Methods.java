@@ -130,12 +130,6 @@ public class Methods {
         } while (Math.abs(x_ - p) > epsLim);
 
         res.setResult(x_, f_);
-
-        System.out.println("parabola steps:");
-        for (ResultPart resultPart : res.steps) {
-            System.out.println(resultPart);
-        }
-
         return res;
     }
 
@@ -233,14 +227,6 @@ public class Methods {
             }
         }
         res.setResult(x, fx);
-        return res;
-    }
-
-    public static Result brent(AbstractFunction fun, double epsLim) {
-        double from = fun.l;
-        double to = fun.r;
-        final Result res = new Result();
-
         return res;
     }
 

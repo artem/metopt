@@ -27,10 +27,10 @@ public class Demo {
                 res = Methods.parabola(new FunVar2(),  eps);
                 break;
             case 3:
-                res = Methods.brent(new FunVar2(),  eps);
+                res = Methods.fib(new FunVar2(),  eps);
                 break;
             case 4:
-                res = Methods.fib(new FunVar2(),  eps);
+                res = Methods.brent(new FunVar2(),  eps);
                 break;
             default:
                 System.out.println("Wrong arguments");

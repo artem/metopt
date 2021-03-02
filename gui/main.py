@@ -12,16 +12,23 @@ import matplotlib
 left_side = -1
 right_side = 1
 
+method = None
+steps = None
+x_min = None
+y_min = None
+l = -1
+r = 1
+
 
 def launch():
-    global min_x_label, min_y_label
+    global min_x_label, min_y_label, steps, x_min, y_min
     eps = float(entry.get())
     ind = values.methods.index(current_method.get())
-    x, y, steps = query.call(ind, eps)
-    paint(steps)
-    min_x_label['text'] = x
-    min_y_label['text'] = y
+    x_min, y_min, steps = query.call(ind, eps)
+    min_x_label['text'] = x_min
+    min_y_label['text'] = y_min
     steps_label['text'] = len(steps)
+    refresh()
 
 
 def paint_main_function():
@@ -30,31 +37,47 @@ def paint_main_function():
     xs = np.linspace(left_side, right_side, 100)
     ys = values.function(xs)
     ax = fig.add_subplot(111)
+    diff = max(ys) - min(ys)
+    ax.axis([left_side, right_side, min(ys) - diff * 0.1, max(ys)])
     ax.plot(xs, ys)
     fig.canvas.draw()
 
 
-def paint_parabola(a, b, c):
+def refresh():
+    global left_side, right_side
+    if not steps:
+        return
+    zoom = (int(zoom_entry.get()) ** 3)
+
+    left_side = x_min - (x_min - l) / zoom
+    right_side = x_min + (r - x_min) / zoom
+    if zoom != 1:
+        perf = min(right_side - x_min, x_min - left_side)
+        left_side = (left_side + x_min - perf) / 2
+        right_side = (right_side + x_min + perf) / 2
+    paint(steps)
+
+
+def paint_parabola(a, b, c, x1, x2):
     xs = np.linspace(left_side, right_side, 100)
-    ys = a * np.power(xs, 2) + b * xs + c
-    ax.plot(xs, ys)
+    ys = a + b * (xs - x1) + c * (xs - x1) * (xs - x2)
+    ax.scatter([x1, x2], [values.function(x1), values.function(x2)])
+    ax.plot(xs, ys, linewidth=1)
 
 
 def paint(steps):
-    global left_side, right_side
-    left_side = float(scale_left.get())
-    right_side = float(scale_right.get())
     paint_main_function()
-    for i in steps:
-        if len(i) == 4:
-            arr = zip(i[::2], i[1::2])
-            arr = [i for i in arr if left_side < i[0] < right_side]
-            x = [i[0] for i in arr]
-            y = [i[1] for i in arr]
-            ax.scatter(x, y)
-            ax.plot(x, y)
-        else:
-            paint_parabola(*i)
+    if steps:
+        for i in steps:
+            if len(i) == 4:
+                arr = zip(i[::2], i[1::2])
+                arr = [i for i in arr if left_side < i[0] < right_side]
+                x = [i[0] for i in arr]
+                y = [i[1] for i in arr]
+                ax.scatter(x, y)
+                ax.plot(x, y)
+            else:
+                paint_parabola(*i)
     fig.canvas.draw()
 
 
@@ -76,15 +99,9 @@ entry = tk.Entry(window)
 entry.insert(tk.END, '1e-10')
 entry.grid(column=1, row=1, pady=5)
 
-
-tk.Label(window, text="Left side").grid(column=0, row=2)
-tk.Label(window, text="Right side").grid(column=0, row=3)
-scale_left = tk.Entry(window)
-scale_right = tk.Entry(window)
-scale_left.grid(column=1, row=2, columnspan=2)
-scale_right.grid(column=1, row=3, columnspan=2)
-scale_left.insert(tk.END, left_side)
-scale_right.insert(tk.END, right_side)
+tk.Label(window, text="Zoom: ↓").grid(column=0, row=2)
+zoom_entry = tk.Scale(window, from_=1, to=200, len=460, orient=tk.HORIZONTAL, resolution=1)
+zoom_entry.grid(column=0, row=3, columnspan=3, pady=5)
 
 fig = plt.figure(1)
 canvas = FigureCanvasTkAgg(fig, master=window)
@@ -105,6 +122,10 @@ steps_label.grid(column=2, row=6, pady=5)
 
 launch_btn = tk.Button(window, text="Launch", command=launch, height=2, width=20, background='black',
                        foreground="white")
-launch_btn.grid(column=0, row=7, columnspan=3, pady=5)
+launch_btn.grid(column=0, row=7, columnspan=2, pady=5)
+
+launch_btn = tk.Button(window, text="Refresh", command=refresh, height=2, width=15, background='black',
+                       foreground="white")
+launch_btn.grid(column=2, row=7, pady=5)
 
 window.mainloop()
