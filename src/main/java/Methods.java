@@ -238,7 +238,7 @@ public class Methods {
         final double distance = to - from;
         int index = 2;
 
-        while (distance / epsLim >= Fibonacci.get(index) && index < Integer.MAX_VALUE) {
+        while (distance / epsLim >= Fibonacci.get(index)) {
             index++;
         }
         final int n = index - 2;
