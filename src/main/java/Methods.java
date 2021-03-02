@@ -232,10 +232,33 @@ public class Methods {
     }
 
     public static Result fib(AbstractFunction fun, double epsLim) {
-        double from = fun.l;
-        double to = fun.r;
+        final double from = fun.l;
+        final double to = fun.r;
         final Result res = new Result();
+        final double distance = to - from;
+        int index = 2;
 
+        while (distance / epsLim >= Fibonacci.get(index) && index < Integer.MAX_VALUE) {
+            index++;
+        }
+        final int n = index - 2;
+
+        double[] ab = new double[]{from, to};
+        for (int i = 1; i <= n; i++) {
+            final double x1 = ab[0] + Fibonacci.relation(n - i + 1, n + 2) * distance;
+            final double x2 = ab[0] + Fibonacci.relation(n - i + 2, n + 2) * distance;
+
+            final double f1 = fun.eval(x1);
+            final double f2 = fun.eval(x2);
+            if (f1 <= f2) {
+                ab[1] = x2;
+            } else {
+                ab[0] = x1;
+            }
+            res.addStep(x1, x2, f1, f2);
+        }
+        double x_ = (ab[0] + ab[1]) / 2;
+        res.setResult(x_, fun.eval(x_));
         return res;
     }
 
@@ -245,5 +268,6 @@ public class Methods {
         System.out.println(Methods.dichotomy(new FunVar2(), 1e-15));
         System.out.println(Methods.parabola(new FunVar2(), 1e-15));
         System.out.println(Methods.brent(new FunVar2(), 1e-15));
+        System.out.println(Methods.fib(new FunVar2(), 1e-15));
     }
 }
