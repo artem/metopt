@@ -2,7 +2,7 @@ import java.text.MessageFormat;
 
 public class Demo {
     public static void main(String[] args) {
-        if (args.length == 2) {
+        if (args.length != 2) {
             System.out.println(
                     "Should call with number of method: " +
                             "\n    0 - Dichotomy method" +
