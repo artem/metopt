@@ -10,7 +10,7 @@ public class Demo {
                             "\n    2 - Fibonacci method" +
                             "\n    3 - Parabola method" +
                             "\n    4 - Brent's method" +
-                    "And eps");
+                    "\nAnd eps");
             return;
         }
         int num = Integer.parseInt(args[0]);
