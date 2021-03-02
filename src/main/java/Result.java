@@ -10,6 +10,10 @@ public class Result {
         steps.add(new Step(x1, x2, f1, f2));
     }
 
+    public void addStep(Step step) {
+        steps.add(step);
+    }
+
     public void setResult(double x, double f) {
         this.x = x;
         this.f = f;
