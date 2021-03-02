@@ -229,6 +229,22 @@ public class Methods {
         return res;
     }
 
+    public static Result brent(AbstractFunction fun, double epsLim) {
+        double from = fun.l;
+        double to = fun.r;
+        final Result res = new Result();
+
+        return res;
+    }
+
+    public static Result fib(AbstractFunction fun, double epsLim) {
+        double from = fun.l;
+        double to = fun.r;
+        final Result res = new Result();
+
+        return res;
+    }
+
 
     public static void main(String[] args) {
         System.out.println(Methods.goldenRatio(new FunVar2(), 1e-15));
