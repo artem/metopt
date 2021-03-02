@@ -83,9 +83,12 @@ public class Methods {
         return getParabola(x[0], x[1], x[2], f.eval(x[0]), f.eval(x[1]), f.eval(x[2]));
     }
 
-    private static double getParabolaMin(double[] x, AbstractFunction f) {
+    private static double getParabolaMin(double[] x, AbstractFunction f, Result result) {
         Arrays.sort(x);
         double[] a = getParabola(x, f);
+        if (result != null) {
+            result.addStep(new ParabolaStep(a, x[0], x[1]));
+        }
         return (x[0] + x[1] - a[1] / a[2]) / 2.;
     }
 
@@ -99,12 +102,11 @@ public class Methods {
 
         double[] x = new double[]{fun.l, randomBottom(fun, from, to, ffrom, fto, epsLim), to};
         double[] f = new double[]{ffrom, fun.eval(x[1]), fto};
-        double x_ = getParabolaMin(x, fun);
+        double x_ = getParabolaMin(x, fun, res);
         double f_ = fun.eval(x_);
         double p;
 
         do {
-            res.addStep(new ParabolaStep(x, f));
             if (x_ < x[1]) {
                 if (f_ >= f[1]) {
                     x = new double[]{x_, x[1], x[2]};
@@ -123,11 +125,16 @@ public class Methods {
                 }
             }
             p = x_;
-            x_ = getParabolaMin(x, fun);
+            x_ = getParabolaMin(x, fun, res);
             f_ = fun.eval(x_);
         } while (Math.abs(x_ - p) > epsLim);
 
         res.setResult(x_, f_);
+
+        System.out.println("parabola steps:");
+        for (ResultPart resultPart : res.steps) {
+            System.out.println(resultPart);
+        }
 
         return res;
     }
@@ -162,7 +169,7 @@ public class Methods {
             }
             boolean accepted = false;
             if (x != w && x != v && w != v && fx != fw && fx != fv && fw != fv) {
-                u = getParabolaMin(new double[]{x, w, v}, fun);
+                u = getParabolaMin(new double[]{x, w, v}, fun, null);
                 if (a <= u && u <= c && abs(u - x) < d2 / 2) {
                     accepted = true;
                     if (u - a < 2 * t || c - u < 2 * t) {
