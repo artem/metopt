@@ -12,4 +12,4 @@ methods = ["Метод дихотомии",
            "Метод Фибоначчи",
            "Метод Брента"]
 
-jar_path = "..\\build\\distributions\\lib\\metopt-0.1-all.jar"
+jar_path = "../build/distributions/lib/metopt-0.1-all.jar"

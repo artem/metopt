@@ -22,3 +22,11 @@ sourceCompatibility = '11'
 targetCompatibility = '11'
 
 mainClassName = 'Demo'
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': mainClassName
+        )
+    }
+}
