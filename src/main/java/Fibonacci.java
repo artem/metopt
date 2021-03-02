@@ -20,12 +20,6 @@ public class Fibonacci {
     }
 
     public static double relation(int a, int b) {
-        int max = a - ((a - b) & (a - b) >> 31);
-        if (false && max > 91) {
-            final double funnyConst = (Math.sqrt(5.0) + 1.0) / 2.0;
-            return Math.pow(funnyConst, a - b);
-        } else {
-            return get(a) / get(b);
-        }
+        return get(a) / get(b);
     }
 }
