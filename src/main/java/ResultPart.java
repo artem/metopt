@@ -1,1 +1,3 @@
-public interface ResultPart {}
+public interface ResultPart {
+    String toLatex();
+}

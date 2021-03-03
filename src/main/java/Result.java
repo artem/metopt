@@ -19,6 +19,7 @@ public class Result {
 
     public void addStep(ResultPart step) {
         steps.add(step);
+        System.out.println(step.toLatex());
     }
 
     public void setResult(double x, double f) {

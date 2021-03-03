@@ -84,15 +84,17 @@ public class Methods {
         return getParabola(p[0].getX(), p[1].getX(), p[2].getX(), p[0].getY(), p[1].getY(), p[2].getY());
     }
 
-    private static double getParabolaMin(double[] x, double[] f, Result result) {
+    private static double getParabolaMin(double[] x, double[] f, ParabolaStep step) {
         Point[] p = new Point[3];
         for (int i = 0; i < p.length; ++i) {
             p[i] = new Point(x[i], f[i]);
         }
         Arrays.sort(p);
         double[] a = getParabola(p);
-        if (result != null) {
-            result.addStep(new ParabolaStep(a, p[0].getX(), p[1].getX()));
+        if (step != null) {
+            step.setA(a);
+            step.setX(new double[]{p[0].getX(), p[1].getX(), p[2].getX()});
+            step.setF(new double[]{p[0].getY(), p[1].getY(), p[2].getY()});
         }
         return (p[0].getX() + p[1].getX() - a[1] / a[2]) / 2.;
     }
@@ -107,8 +109,12 @@ public class Methods {
 
         double[] x = new double[]{fun.l, randomBottom(fun, from, to, ffrom, fto, epsLim), to};
         double[] f = new double[]{ffrom, fun.eval(x[1]), fto};
-        double x_ = getParabolaMin(x, f, res);
+        ParabolaStep step = new ParabolaStep();
+        double x_ = getParabolaMin(x, f, step);
         double f_ = fun.eval(x_);
+        step.setX_(x_);
+        step.setF_(f_);
+        res.addStep(step);
         double p;
 
         do {
@@ -130,8 +136,12 @@ public class Methods {
                 }
             }
             p = x_;
-            x_ = getParabolaMin(x, f, res);
+            step = new ParabolaStep();
+            x_ = getParabolaMin(x, f, step);
             f_ = fun.eval(x_);
+            step.setX_(x_);
+            step.setF_(f_);
+            res.addStep(step);
         } while (Math.abs(x_ - p) > epsLim);
 
         res.setResult(x_, f_);
@@ -159,7 +169,7 @@ public class Methods {
         d1 = d = c - a;
 
         while (true) {
-            //res.addStep(a, c, fa, fc); FIXME
+            res.addStep(new BrentStep(a, c, x, fx, v, fv, w, fw, d / d1));
             double b = (a + c) / 2;
             d2 = d1;
             d1 = d;

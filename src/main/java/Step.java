@@ -18,6 +18,7 @@ public class Step implements ResultPart {
         return x1 + " " + f1 + " " + x2 + " " + f2;
     }
 
+    @Override
     public String toLatex() {
         return new StringJoiner(" & ", "", "\\\\ \\hline")
                 .add(doubleToString(a))
