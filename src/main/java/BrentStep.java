@@ -12,7 +12,7 @@ public class BrentStep implements ResultPart {
     double fw;
     double frac;
 
-    public BrentStep(double l, double r, double x, double fx, double v, double fv, double w, double fw, double r1) {
+    public BrentStep(double l, double r, double x, double fx, double v, double fv, double w, double fw, double frac) {
         this.l = l;
         this.r = r;
         this.x = x;
@@ -21,7 +21,7 @@ public class BrentStep implements ResultPart {
         this.fv = fv;
         this.w = w;
         this.fw = fw;
-        this.r = r1;
+        this.frac = frac;
     }
 
     @Override
@@ -35,6 +35,7 @@ public class BrentStep implements ResultPart {
                 .add(doubleToString(fv))
                 .add(doubleToString(w))
                 .add(doubleToString(fw))
+                .add(doubleToString(frac))
                 .toString();
     }
 
@@ -49,6 +50,7 @@ public class BrentStep implements ResultPart {
                 .add(doubleToString(fv))
                 .add(doubleToString(w))
                 .add(doubleToString(fw))
+                .add(doubleToString(frac))
                 .toString();
     }
 
