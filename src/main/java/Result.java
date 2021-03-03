@@ -13,8 +13,7 @@ public class Result {
 
     public void addStep(double a, double b, double x1, double x2, double f1, double f2) {
         Step step = new Step(a, b, x1, x2, f1, f2);
-        steps.add(step);
-        System.out.println(step.toLatex());
+        addStep(step);
     }
 
     public void addStep(ResultPart step) {
@@ -29,6 +28,6 @@ public class Result {
 
     @Override
     public String toString() {
-        return String.format("%s {x=%s, f=%s}", name, x, f);
+        return String.format("%s {x=%s, f=%s} after %d iterations.", name, x, f, steps.size());
     }
 }

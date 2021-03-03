@@ -41,9 +41,6 @@ public class ParabolaStep implements ResultPart {
     @Override
     public String toLatex() {
         return new StringJoiner(" & ", "", "\\\\ \\hline")
-                .add(doubleToString(a[0]))
-                .add(doubleToString(a[1]))
-                .add(doubleToString(a[2]))
                 .add(doubleToString(x[0]))
                 .add(doubleToString(f[0]))
                 .add(doubleToString(x[1]))

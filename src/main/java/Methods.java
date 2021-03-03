@@ -279,10 +279,13 @@ public class Methods {
 
 
     public static void main(String[] args) {
-        System.out.println(Methods.goldenRatio(new FunVar2(), 1e-5));
-        System.out.println(Methods.dichotomy(new FunVar2(), 1e-5));
-        System.out.println(Methods.parabola(new FunVar2(), 1e-5));
-        System.out.println(Methods.brent(new FunVar2(), 1e-5));
-        System.out.println(Methods.fib(new FunVar2(), 1e-5));
+//        final AbstractFunction f = new FunVar2();
+        final AbstractFunction f = new FunPolynomial();
+        final double eps = 1e-5;
+        System.out.println(Methods.goldenRatio(f, eps));
+        System.out.println(Methods.dichotomy(f, eps));
+        System.out.println(Methods.parabola(f, eps));
+        System.out.println(Methods.brent(f, eps));
+        System.out.println(Methods.fib(f, eps));
     }
 }
