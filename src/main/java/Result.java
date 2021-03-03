@@ -2,12 +2,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Result {
-    List<ResultPart> steps = new ArrayList<>();
+    private final String name;
+    final List<ResultPart> steps = new ArrayList<>();
     double x;
     double f;
 
-    public void addStep(double x1, double x2, double f1, double f2) {
-        steps.add(new Step(x1, x2, f1, f2));
+    public Result(String name) {
+        this.name = name;
+    }
+
+    public void addStep(double a, double b, double x1, double x2, double f1, double f2) {
+        Step step = new Step(a, b, x1, x2, f1, f2);
+        steps.add(step);
+        System.out.println(step.toLatex());
     }
 
     public void addStep(ResultPart step) {
@@ -21,6 +28,6 @@ public class Result {
 
     @Override
     public String toString() {
-        return String.format("Result {x=%s, f=%s}", x, f);
+        return String.format("%s {x=%s, f=%s}", name, x, f);
     }
 }
