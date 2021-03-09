@@ -8,12 +8,13 @@ public class Methods {
     public static Result goldenRatio(AbstractFunction fun, double epsLim) {
         double from = fun.l;
         double to = fun.r;
-        final Result res = new Result();
+        final Result res = new Result("GoldenRatio");
         final double Tau = (Math.sqrt(5) - 1) / 2;
         double I = (to - from) * Tau;
         double[] x = new double[]{to - I, from + I};
         double[] f = new double[]{fun.eval(x[0]), fun.eval(x[1])};
         double[] ab = new double[]{from, to};
+        res.addStep(ab[0], ab[1], x[0], x[1], f[0], f[1]);
         for (double eps = (ab[1] - ab[0]) / 2; eps > epsLim; eps *= Tau) {
             I *= Tau;
             int le = f[0] <= f[1] ? 1 : 0;
@@ -22,7 +23,7 @@ public class Methods {
             x[1 - le] = ab[le] + (le == 0 ? I : -I);
             f[le] = f[1 - le];
             f[1 - le] = fun.eval(x[1 - le]);
-            res.addStep(x[0], x[1], f[0], f[1]);
+            res.addStep(ab[0], ab[1], x[0], x[1], f[0], f[1]);
         }
         double x_ = (ab[0] + ab[1]) / 2;
         res.setResult(x_, fun.eval(x_));
@@ -32,19 +33,19 @@ public class Methods {
     public static Result dichotomy(AbstractFunction fun, double epsLim) {
         double from = fun.l;
         double to = fun.r;
-        final Result res = new Result();
+        final Result res = new Result("Dichotomy");
         double d = (to-from)/3;
         double[] x = new double[]{(from + to - d) / 2, (from + to + d) / 2};
         double[] f;
         double[] ab = new double[]{from, to};
-        res.addStep(x[0], x[1], fun.eval(x[0]), fun.eval(x[1]));
+        res.addStep(ab[0], ab[1], x[0], x[1], fun.eval(x[0]), fun.eval(x[1]));
         for (double eps = (ab[1] - ab[0]) / 2; eps > epsLim; eps = (ab[1] - ab[0]) / 2) {
             d = (ab[1]-ab[0])/3;
             x = new double[]{(ab[0] + ab[1] - d) / 2, (ab[0] + ab[1] + d) / 2};
             f = new double[]{fun.eval(x[0]), fun.eval(x[1])};
             int le = f[0] <= f[1] ? 1 : 0;
             ab[le] = x[le];
-            res.addStep(x[0], x[1], f[0], f[1]);
+            res.addStep(ab[0], ab[1], x[0], x[1], f[0], f[1]);
         }
         double x_ = (ab[0] + ab[1]) / 2;
         res.setResult(x_, fun.eval(x_));
@@ -79,17 +80,23 @@ public class Methods {
                 };
     }
 
-    private static double[] getParabola(double[] x, AbstractFunction f) {
-        return getParabola(x[0], x[1], x[2], f.eval(x[0]), f.eval(x[1]), f.eval(x[2]));
+    private static double[] getParabola(Point[] p) {
+        return getParabola(p[0].getX(), p[1].getX(), p[2].getX(), p[0].getY(), p[1].getY(), p[2].getY());
     }
 
-    private static double getParabolaMin(double[] x, AbstractFunction f, Result result) {
-        Arrays.sort(x);
-        double[] a = getParabola(x, f);
-        if (result != null) {
-            result.addStep(new ParabolaStep(a, x[0], x[1]));
+    private static double getParabolaMin(double[] x, double[] f, ParabolaStep step) {
+        Point[] p = new Point[3];
+        for (int i = 0; i < p.length; ++i) {
+            p[i] = new Point(x[i], f[i]);
         }
-        return (x[0] + x[1] - a[1] / a[2]) / 2.;
+        Arrays.sort(p);
+        double[] a = getParabola(p);
+        if (step != null) {
+            step.setA(a);
+            step.setX(new double[]{p[0].getX(), p[1].getX(), p[2].getX()});
+            step.setF(new double[]{p[0].getY(), p[1].getY(), p[2].getY()});
+        }
+        return (p[0].getX() + p[1].getX() - a[1] / a[2]) / 2.;
     }
 
     public static Result parabola(AbstractFunction fun, double epsLim) {
@@ -98,12 +105,16 @@ public class Methods {
         final double ffrom = fun.eval(from);
         final double fto = fun.eval(to);
 
-        final Result res = new Result();
+        final Result res = new Result("Parabola");
 
         double[] x = new double[]{fun.l, randomBottom(fun, from, to, ffrom, fto, epsLim), to};
         double[] f = new double[]{ffrom, fun.eval(x[1]), fto};
-        double x_ = getParabolaMin(x, fun, res);
+        ParabolaStep step = new ParabolaStep();
+        double x_ = getParabolaMin(x, f, step);
         double f_ = fun.eval(x_);
+        step.setX_(x_);
+        step.setF_(f_);
+        res.addStep(step);
         double p;
 
         do {
@@ -125,8 +136,12 @@ public class Methods {
                 }
             }
             p = x_;
-            x_ = getParabolaMin(x, fun, res);
+            step = new ParabolaStep();
+            x_ = getParabolaMin(x, f, step);
             f_ = fun.eval(x_);
+            step.setX_(x_);
+            step.setF_(f_);
+            res.addStep(step);
         } while (Math.abs(x_ - p) > epsLim);
 
         res.setResult(x_, f_);
@@ -135,7 +150,7 @@ public class Methods {
 
 
     public static Result brent(AbstractFunction fun, double epsLim) {
-        final Result res = new Result();
+        final Result res = new Result("Brent");
 
         final double K = (3 - sqrt(5)) / 2;
 
@@ -154,7 +169,7 @@ public class Methods {
         d1 = d = c - a;
 
         while (true) {
-            res.addStep(a, c, fa, fc);
+            res.addStep(new BrentStep(a, c, x, fx, v, fv, w, fw, d / d1));
             double b = (a + c) / 2;
             d2 = d1;
             d1 = d;
@@ -164,7 +179,7 @@ public class Methods {
             }
             boolean accepted = false;
             if (x != w && x != v && w != v && fx != fw && fx != fv && fw != fv) {
-                u = getParabolaMin(new double[]{x, w, v}, fun, null);
+                u = getParabolaMin(new double[]{x, w, v}, new double[]{fx, fw, fv}, null);
                 if (a <= u && u <= c && abs(u - x) < d2 / 2) {
                     accepted = true;
                     if (u - a < 2 * t || c - u < 2 * t) {
@@ -234,11 +249,11 @@ public class Methods {
     public static Result fib(AbstractFunction fun, double epsLim) {
         final double from = fun.l;
         final double to = fun.r;
-        final Result res = new Result();
+        final Result res = new Result("Fibonacci");
         final double distance = to - from;
         int index = 2;
 
-        while (distance / epsLim >= Fibonacci.get(index) && index < Integer.MAX_VALUE) {
+        while (distance / epsLim >= Fibonacci.get(index)) {
             index++;
         }
         final int n = index - 2;
@@ -250,12 +265,12 @@ public class Methods {
 
             final double f1 = fun.eval(x1);
             final double f2 = fun.eval(x2);
+            res.addStep(ab[0], ab[1], x1, x2, f1, f2);
             if (f1 <= f2) {
                 ab[1] = x2;
             } else {
                 ab[0] = x1;
             }
-            res.addStep(x1, x2, f1, f2);
         }
         double x_ = (ab[0] + ab[1]) / 2;
         res.setResult(x_, fun.eval(x_));
@@ -264,10 +279,13 @@ public class Methods {
 
 
     public static void main(String[] args) {
-        System.out.println(Methods.goldenRatio(new FunVar2(), 1e-15));
-        System.out.println(Methods.dichotomy(new FunVar2(), 1e-15));
-        System.out.println(Methods.parabola(new FunVar2(), 1e-15));
-        System.out.println(Methods.brent(new FunVar2(), 1e-15));
-        System.out.println(Methods.fib(new FunVar2(), 1e-15));
+//        final AbstractFunction f = new FunVar2();
+        final AbstractFunction f = new FunPolynomial();
+        final double eps = 1e-5;
+        System.out.println(Methods.goldenRatio(f, eps));
+        System.out.println(Methods.dichotomy(f, eps));
+        System.out.println(Methods.parabola(f, eps));
+        System.out.println(Methods.brent(f, eps));
+        System.out.println(Methods.fib(f, eps));
     }
 }
