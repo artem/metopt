@@ -1,5 +1,6 @@
 public abstract class AbstractFunction {
     protected final double l, r;
+    int calculations;
 
     protected AbstractFunction() {
         this.l = Double.NEGATIVE_INFINITY;
@@ -11,12 +12,18 @@ public abstract class AbstractFunction {
         this.r = r;
     }
 
-    public final double eval(double x) {
+    public final double evalNoStat(double x) {
         if (!inBounds(x)) {
             System.err.format("%f is not in [%f;%f]", x, l, r);
             throw new IllegalArgumentException("x is out of bounds");
         }
+
         return evalImpl(x);
+    }
+
+    public final double eval(double x) {
+        calculations++;
+        return evalNoStat(x);
     }
 
     private boolean inBounds(double x) {

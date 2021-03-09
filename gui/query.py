@@ -14,4 +14,4 @@ def call(number, eps):
 
 
 def call_get_time(number, eps):
-    return float(subprocess.check_output([f"{java_path}java", "-jar", values.jar_path, str(number), str(eps), "-t"]))
+    return int(subprocess.check_output([f"{java_path}java", "-jar", values.jar_path, str(number), str(eps), "-t"]))

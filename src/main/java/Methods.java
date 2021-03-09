@@ -38,7 +38,7 @@ public class Methods {
         double[] x = new double[]{(from + to - d) / 2, (from + to + d) / 2};
         double[] f;
         double[] ab = new double[]{from, to};
-        res.addStep(ab[0], ab[1], x[0], x[1], fun.eval(x[0]), fun.eval(x[1]));
+        res.addStep(ab[0], ab[1], x[0], x[1], fun.evalNoStat(x[0]), fun.evalNoStat(x[1]));
         for (double eps = (ab[1] - ab[0]) / 2; eps > epsLim; eps = (ab[1] - ab[0]) / 2) {
             d = (ab[1]-ab[0])/3;
             x = new double[]{(ab[0] + ab[1] - d) / 2, (ab[0] + ab[1] + d) / 2};

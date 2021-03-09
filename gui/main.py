@@ -42,7 +42,7 @@ def calc_times():
         ax.text(ind*2+1, vls[2*ind], name, fontsize=6, bbox={'facecolor': color, 'alpha': 0.2})
         ind += 1
     ax.set_xlabel('Eps = 1e-x')
-    ax.set_ylabel('Время для 500 тестов (ns)')
+    ax.set_ylabel('Число вычислений функции')
     fig.canvas.draw()
 
 
