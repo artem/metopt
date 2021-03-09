@@ -13,6 +13,7 @@ public abstract class AbstractFunction {
 
     public final double eval(double x) {
         if (!inBounds(x)) {
+            System.err.format("%f is not in [%f;%f]", x, l, r);
             throw new IllegalArgumentException("x is out of bounds");
         }
         return evalImpl(x);

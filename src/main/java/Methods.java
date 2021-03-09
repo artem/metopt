@@ -85,7 +85,7 @@ public class Methods {
     }
 
     private static double getParabolaMin(double[] x, double[] f, ParabolaStep step) {
-        Point[] p = new Point[3];
+        final Point[] p = new Point[3];
         for (int i = 0; i < p.length; ++i) {
             p[i] = new Point(x[i], f[i]);
         }
@@ -138,6 +138,9 @@ public class Methods {
             p = x_;
             step = new ParabolaStep();
             x_ = getParabolaMin(x, f, step);
+            if (Double.isNaN(x_)) {
+                break;
+            }
             f_ = fun.eval(x_);
             step.setX_(x_);
             step.setF_(f_);
