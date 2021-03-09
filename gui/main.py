@@ -8,6 +8,7 @@ import values
 import query
 import matplotlib.pyplot as plt
 import matplotlib
+import time
 
 left_side = -1
 right_side = 1
@@ -20,15 +21,45 @@ l = -1
 r = 1
 
 
+def calc_method(met):
+    result = []
+    for pre_eps in range(1, 13):
+        eps = float(f"1e-{pre_eps}")
+        result.append(query.call_get_time(met, eps))
+    return result
+
+
+def calc_times():
+    global ax
+    result = {name: calc_method(i) for i, name in enumerate(values.methods)}
+    fig.clf()
+    ax = fig.add_subplot(111)
+    ind = 0
+    for name, vls in result.items():
+        print(name, vls)
+        color = values.colors[values.methods.index(name)]
+        ax.plot([i+1 for i in range(len(vls))], vls, color)
+        ax.text(ind*2+1, vls[2*ind], name, fontsize=6, bbox={'facecolor': color, 'alpha': 0.2})
+        ind += 1
+    ax.set_xlabel('Eps = 1e-x')
+    ax.set_ylabel('Время для 500 тестов (ns)')
+    fig.canvas.draw()
+
+
 def launch():
     global min_x_label, min_y_label, steps, x_min, y_min
-    eps = float(entry.get())
-    ind = values.methods.index(current_method.get())
-    x_min, y_min, steps = query.call(ind, eps)
+    action = values.actions.index(current_action.get())
+    if action == 0:
+        eps = float(entry.get())
+        ind = values.methods.index(current_method.get())
+        x_min, y_min, steps = query.call(ind, eps)
+        refresh()
+    elif action == 1:
+        calc_times()
+        x_min, y_min, steps = "Not available", "Not available", []
     min_x_label['text'] = x_min
     min_y_label['text'] = y_min
     steps_label['text'] = len(steps)
-    refresh()
 
 
 def paint_main_function():
@@ -120,9 +151,14 @@ min_x_label.grid(column=0, row=6, pady=5)
 min_y_label.grid(column=1, row=6, pady=5)
 steps_label.grid(column=2, row=6, pady=5)
 
+current_action = tk.StringVar()
+combo = ttk.Combobox(window, textvariable=current_action, values=values.actions, state="readonly")
+combo.grid(column=0, row=7, pady=5)
+combo.current(0)
+
 launch_btn = tk.Button(window, text="Launch", command=launch, height=2, width=20, background='black',
                        foreground="white")
-launch_btn.grid(column=0, row=7, columnspan=2, pady=5)
+launch_btn.grid(column=1, row=7, pady=5)
 
 launch_btn = tk.Button(window, text="Refresh", command=refresh, height=2, width=15, background='black',
                        foreground="white")

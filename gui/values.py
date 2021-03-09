@@ -12,4 +12,13 @@ methods = ["Метод дихотомии",
            "Метод Фибоначчи",
            "Метод Брента"]
 
+colors = ["b",
+          "g",
+          "y",
+          "r",
+          "orange"]
+
+actions = ["Execute method",
+           "Measure the time"]
+
 jar_path = "../build/distributions/lib/metopt-0.1-all.jar"
