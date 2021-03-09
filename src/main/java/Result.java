@@ -12,7 +12,7 @@ public class Result {
     }
 
     public void addStep(double a, double b, double x1, double x2, double f1, double f2) {
-        Step step = new Step(a, b, x1, x2, f1, f2);
+        Step step = new Step(a, b, x1, x2, f1, f2, (steps.isEmpty())? null : (Step) steps.get(steps.size() - 1));
         addStep(step);
     }
 

@@ -114,9 +114,11 @@ public class Methods {
         double f_ = fun.eval(x_);
         step.setX_(x_);
         step.setF_(f_);
+        step.setPrev(null);
         res.addStep(step);
-        double p;
 
+        double p;
+        ParabolaStep prev;
         do {
             if (x_ < x[1]) {
                 if (f_ >= f[1]) {
@@ -136,6 +138,7 @@ public class Methods {
                 }
             }
             p = x_;
+            prev = step;
             step = new ParabolaStep();
             x_ = getParabolaMin(x, f, step);
             if (Double.isNaN(x_)) {
@@ -144,6 +147,7 @@ public class Methods {
             f_ = fun.eval(x_);
             step.setX_(x_);
             step.setF_(f_);
+            step.setPrev(prev);
             res.addStep(step);
         } while (Math.abs(x_ - p) > epsLim);
 
@@ -282,8 +286,8 @@ public class Methods {
 
 
     public static void main(String[] args) {
-//        final AbstractFunction f = new FunVar2();
-        final AbstractFunction f = new FunPolynomial();
+        final AbstractFunction f = new FunVar2();
+        //final AbstractFunction f = new FunPolynomial();
         final double eps = 1e-5;
         System.out.println(Methods.goldenRatio(f, eps));
         System.out.println(Methods.dichotomy(f, eps));

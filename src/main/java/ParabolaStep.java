@@ -7,6 +7,7 @@ public class ParabolaStep implements ResultPart {
     private double[] f;
     private double x_;
     private double f_;
+    private ParabolaStep prev;
 
     public ParabolaStep() {}
 
@@ -38,6 +39,10 @@ public class ParabolaStep implements ResultPart {
         this.f_ = f_;
     }
 
+    public void setPrev(final ParabolaStep prev) {
+        this.prev = prev;
+    }
+
     @Override
     public String toLatex() {
         return new StringJoiner(" & ", "", "\\\\ \\hline")
@@ -49,6 +54,7 @@ public class ParabolaStep implements ResultPart {
                 .add(doubleToString(f[2]))
                 .add(doubleToString(x_))
                 .add(doubleToString(f_))
+                .add(doubleToString(prev == null ? 1.0 : (x[2] - x[0]) / (prev.x[2] - prev.x[0])))
                 .toString();
     }
 
