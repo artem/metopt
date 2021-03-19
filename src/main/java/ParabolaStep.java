@@ -1,7 +1,6 @@
-import java.util.Locale;
 import java.util.StringJoiner;
 
-public class ParabolaStep implements ResultPart {
+public class ParabolaStep extends AbstractStep {
     private double[] a;
     private double[] x;
     private double[] f;
@@ -56,10 +55,6 @@ public class ParabolaStep implements ResultPart {
                 .add(doubleToString(f_))
                 .add(doubleToString(prev == null ? 1.0 : (x[2] - x[0]) / (prev.x[2] - prev.x[0])))
                 .toString();
-    }
-
-    private String doubleToString(double num) {
-        return String.format(Locale.ROOT, "%.7f", num);
     }
 
     @Override

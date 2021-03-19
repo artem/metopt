@@ -4,7 +4,6 @@ import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 
 public class Methods {
-
     public static Result goldenRatio(AbstractFunction fun, double epsLim) {
         double from = fun.l;
         double to = fun.r;

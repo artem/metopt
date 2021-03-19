@@ -1,5 +1,3 @@
-import java.text.MessageFormat;
-
 public class Demo {
     public static void main(String[] args) {
         if (args.length < 2) {
@@ -48,7 +46,7 @@ public class Demo {
         } else {
             System.out.println(res.x);
             System.out.println(res.f);
-            for (ResultPart i : res.steps) {
+            for (AbstractStep i : res.steps) {
                 System.out.println(i);
             }
         }

@@ -1,7 +1,6 @@
-import java.util.Locale;
 import java.util.StringJoiner;
 
-public class BrentStep implements ResultPart {
+public class BrentStep extends AbstractStep {
     double l;
     double r;
     double x;
@@ -52,9 +51,5 @@ public class BrentStep implements ResultPart {
                 .add(doubleToString(fw))
                 .add(doubleToString(frac))
                 .toString();
-    }
-
-    private String doubleToString(double num) {
-        return String.format(Locale.ROOT, "%.7f", num);
     }
 }

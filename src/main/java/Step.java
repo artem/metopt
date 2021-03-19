@@ -1,7 +1,6 @@
-import java.util.Locale;
 import java.util.StringJoiner;
 
-public class Step implements ResultPart {
+public class Step extends AbstractStep {
     final double x1, x2, f1, f2, a, b;
     final Step prev;
 
@@ -31,9 +30,5 @@ public class Step implements ResultPart {
                 .add(doubleToString(f2))
                 .add(doubleToString(prev == null ? 1.0 : (b - a) / (prev.b - prev.a)))
                 .toString();
-    }
-
-    private String doubleToString(double num) {
-        return String.format(Locale.ROOT, "%.7f", num);
     }
 }
