@@ -29,7 +29,7 @@ def calc_method(met):
     return result
 
 
-def calc_times():
+def calc_nums():
     global ax
     result = {name: calc_method(i) for i, name in enumerate(values.methods)}
     fig.clf()
@@ -55,7 +55,7 @@ def launch():
         x_min, y_min, steps = query.call(ind, eps)
         refresh()
     elif action == 1:
-        calc_times()
+        calc_nums()
         x_min, y_min, steps = "Not available", "Not available", []
     min_x_label['text'] = x_min
     min_y_label['text'] = y_min
