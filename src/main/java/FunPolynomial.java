@@ -1,10 +1,10 @@
 public class FunPolynomial extends AbstractFunction {
     FunPolynomial() {
-        super(1, 6);
+        super(-1.5, 2);
     }
 
     @Override
     protected double evalImpl(double x) {
-        return ((((x - 5) * x - 4) * x - 1) * x + 5) * x;
+        return 1 + x * x * (-7 + x * (0.5 + 3.0 * x));
     }
 }

@@ -3,7 +3,7 @@ import java.util.List;
 
 public class Result {
     private final String name;
-    final List<ResultPart> steps = new ArrayList<>();
+    final List<AbstractStep> steps = new ArrayList<>();
     double x;
     double f;
 
@@ -16,7 +16,7 @@ public class Result {
         addStep(step);
     }
 
-    public void addStep(ResultPart step) {
+    public void addStep(AbstractStep step) {
         steps.add(step);
         //System.out.println(step.toLatex());
     }

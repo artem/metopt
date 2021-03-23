@@ -4,7 +4,6 @@ import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 
 public class Methods {
-
     public static Result goldenRatio(AbstractFunction fun, double epsLim) {
         double from = fun.l;
         double to = fun.r;
@@ -266,17 +265,26 @@ public class Methods {
         final int n = index - 2;
 
         double[] ab = new double[]{from, to};
-        for (int i = 1; i <= n; i++) {
-            final double x1 = ab[0] + Fibonacci.relation(n - i + 1, n + 2) * distance;
-            final double x2 = ab[0] + Fibonacci.relation(n - i + 2, n + 2) * distance;
+        double x1 = ab[0] + Fibonacci.relation(n - 1 + 1, n + 2) * distance;
+        double x2 = ab[0] + Fibonacci.relation(n - 1 + 2, n + 2) * distance;
 
-            final double f1 = fun.eval(x1);
-            final double f2 = fun.eval(x2);
+        double f1 = fun.eval(x1);
+        double f2 = fun.eval(x2);
+        for (int i = 1; i <= n; i++) {
+
             res.addStep(ab[0], ab[1], x1, x2, f1, f2);
             if (f1 <= f2) {
                 ab[1] = x2;
+                x2 = x1;
+                f2 = f1;
+                x1 = ab[0] + Fibonacci.relation(n - i, n + 2) * distance;
+                f1 = fun.eval(x1);
             } else {
                 ab[0] = x1;
+                x1 = x2;
+                f1 = f2;
+                x2 = ab[0] + Fibonacci.relation(n - i + 1, n + 2) * distance;
+                f2 = fun.eval(x2);
             }
         }
         double x_ = (ab[0] + ab[1]) / 2;
@@ -286,13 +294,13 @@ public class Methods {
 
 
     public static void main(String[] args) {
-        final AbstractFunction f = new FunVar2();
-        //final AbstractFunction f = new FunPolynomial();
-        final double eps = 1e-5;
-        System.out.println(Methods.goldenRatio(f, eps));
+        //final AbstractFunction f = new FunVar2();
+        final AbstractFunction f = new FunPolynomial();
+        final double eps = 1e-15;
         System.out.println(Methods.dichotomy(f, eps));
+        System.out.println(Methods.goldenRatio(f, eps));
+        System.out.println(Methods.fib(f, eps));
         System.out.println(Methods.parabola(f, eps));
         System.out.println(Methods.brent(f, eps));
-        System.out.println(Methods.fib(f, eps));
     }
 }
