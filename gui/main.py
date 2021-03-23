@@ -25,7 +25,7 @@ def calc_method(met):
     result = []
     for pre_eps in range(1, 13):
         eps = float(f"1e-{pre_eps}")
-        result.append(query.call_get_time(met, eps))
+        result.append(query.call_get_number(met, eps))
     return result
 
 

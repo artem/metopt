@@ -13,5 +13,5 @@ def call(number, eps):
     return float(data[0]), float(data[1]), [list(map(float, i.split())) for i in data[2:]]
 
 
-def call_get_time(number, eps):
+def call_get_number(number, eps):
     return int(subprocess.check_output([f"{java_path}java", "-jar", values.jar_path, str(number), str(eps), "-t"]))

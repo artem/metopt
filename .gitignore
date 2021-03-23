@@ -5,3 +5,5 @@ build
 
 # KDE Plasma garbage
 .directory
+*.pyc
+gui/venv/
