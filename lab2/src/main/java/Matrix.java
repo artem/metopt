@@ -1,3 +1,4 @@
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -22,13 +23,13 @@ public class Matrix {
         n = data.size() > 0 ? data.get(0).size() : 0;
     }
 
-    Matrix(int n, int m) {
+    Matrix(int m, int n) {
         data = new ArrayList<>();
         for (int i = 0; i < m; i++) {
             data.add(IntStream.range(0, n).mapToObj(x -> 0.).collect(Collectors.toList()));
         }
-        this.n = n;
         this.m = m;
+        this.n = n;
     }
 
     public static double scalar(Matrix m1, Matrix m2) throws MatrixException {
@@ -54,6 +55,17 @@ public class Matrix {
         return result;
     }
 
+    public static Matrix sum(Matrix m1, Matrix m2) throws MatrixException {
+        if (m1.m != m2.m || m1.n != m2.n) {
+            throw new MatrixException("Matrices of different sizes");
+        }
+        Matrix result = new Matrix(m1.m, m1.n);
+        for (int i = 0; i < m1.m; ++i)
+            for (int j = 0; j < m1.n; ++j)
+                result.set(i, j, m1.get(i, j) + m2.get(i, j));
+        return result;
+    }
+
     public Double get(int y, int x) {
         return data.get(y).get(x);
     }
@@ -64,6 +76,21 @@ public class Matrix {
 
     public void addTo(int y, int x, double value) {
         data.get(y).set(x, data.get(y).get(x) + value);
+    }
+
+    public Matrix T() {
+        Matrix matrix = new Matrix(n, m);
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                matrix.set(i, j, get(j, i));
+        return matrix;
+    }
+
+    public void Transpose() {
+        data = T().data;
+        int t = m;
+        m = n;
+        n = t;
     }
 
     @Override
