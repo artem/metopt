@@ -5,7 +5,7 @@ import java.util.stream.IntStream;
 public class Matrix {
     public int m; // height, rows, y
     public int n; // width, cols, x
-    private List<List<Double>> data;
+    private List<ArrayList<Double>> data;
 
     Matrix() {
         n = 0;
@@ -35,7 +35,7 @@ public class Matrix {
     Matrix(int m, int n) {
         data = new ArrayList<>();
         for (int i = 0; i < m; i++) {
-            data.add(IntStream.range(0, n).mapToObj(x -> 0.).collect(Collectors.toList()));
+            data.add(IntStream.range(0, n).mapToObj(x -> 0.).collect(Collectors.toCollection(ArrayList::new)));
         }
         this.m = m;
         this.n = n;
