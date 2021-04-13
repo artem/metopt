@@ -1,15 +1,15 @@
 import java.util.List;
 
 public class SteepestDescent {
-    AbstractFunction f;
-    double eps;
+    private final AbstractFunction f;
+    private final double eps;
 
     public SteepestDescent(AbstractFunction f, double eps) {
         this.f = f;
         this.eps = eps;
     }
 
-    public static double goldenRatio(AbstractFunction fun, double epsLim, double from, double to) throws MatrixException {
+    private double goldenRatio(AbstractFunction fun, double epsLim, double from, double to) throws MatrixException {
         final double Tau = (Math.sqrt(5) - 1) / 2;
         double I = (to - from) * Tau;
         double[] x = new double[]{to - I, from + I};
@@ -32,10 +32,7 @@ public class SteepestDescent {
     public Matrix process() throws MatrixException {
         int iterations = 1;
         Matrix x = Matrix.mul(Matrix.sum(f.start, f.end), 0.5);
-        System.out.println("x initial: " + x);
         Matrix p = f.gradient(x).invert();
-        System.out.println("gradient reversed: " + p);
-        System.out.println("p.len = " + p.len());
         while (p.len() > eps) {
             Matrix finalX = x;
             Matrix finalP = p;
@@ -46,13 +43,11 @@ public class SteepestDescent {
                 }
             };
             double a = goldenRatio(g, eps, 0, 1000000);
-            System.out.println("a = " + a);
             x = Matrix.sum(x, Matrix.mul(p, a));
             p = f.gradient(x).invert();
             ++iterations;
         }
         System.out.println("steepest descent took " + iterations + " iterations.");
-        System.out.println("minimal value " + f.eval(x));
         return x;
     }
 
