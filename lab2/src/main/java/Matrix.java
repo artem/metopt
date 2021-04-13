@@ -68,7 +68,7 @@ public class Matrix {
         Matrix result = new Matrix(m1.m, m1.n);
         for (int i = 0; i < m1.m; ++i)
             for (int j = 0; j < m1.n; ++j)
-                result.set(i, j, result.get(i, j) * v);
+                result.set(i, j, m1.get(i, j) * v);
         return result;
     }
 
