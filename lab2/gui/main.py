@@ -19,6 +19,12 @@ y_min = None
 l = -1
 r = 1
 
+settings = {
+    'eps': '1e-3',
+    'start': '0 0',
+    'alpha': '1'
+}
+
 
 def calc_method(met):
     result = []
@@ -37,8 +43,8 @@ def calc_nums():
     for name, vls in result.items():
         print(name, vls)
         color = values.colors[values.methods.index(name)]
-        ax.plot([i+1 for i in range(len(vls))], vls, color)
-        ax.text(ind*2+1, vls[2*ind], name, fontsize=6, bbox={'facecolor': color, 'alpha': 0.2})
+        ax.plot([i + 1 for i in range(len(vls))], vls, color)
+        ax.text(ind * 2 + 1, vls[2 * ind], name, fontsize=6, bbox={'facecolor': color, 'alpha': 0.2})
         ind += 1
     ax.set_xlabel('Eps = 1e-x')
     ax.set_ylabel('Число вычислений функции')
@@ -88,8 +94,29 @@ def refresh():
 
 
 def func():
+    global settings
+
+    def save():
+        settings['eps'] = float(eps.get())
+        settings['start'] = list(map(float, start.get().split()))
+        settings['alpha'] = float(alpha.get())
+        top.destroy()
+
     top = tk.Toplevel(window)
-    button_top_level = tk.Button(top, text='Нажми').pack()
+    tk.Label(top, text="Eps:").pack(anchor=tk.W)
+    eps = tk.Entry(top)
+    eps.insert(tk.END, settings['eps'])
+    eps.pack(anchor=tk.W)
+    tk.Label(top, text="Start").pack(anchor=tk.W)
+    start = tk.Entry(top)
+    start.insert(tk.END, settings['start'])
+    start.pack(anchor=tk.W)
+    tk.Label(top, text="Alpha").pack(anchor=tk.W)
+    alpha = tk.Entry(top)
+    alpha.insert(tk.END, settings['alpha'])
+    alpha.pack(anchor=tk.W)
+    tk.Button(top, text="save", command=save, height=2, width=15, background='black',
+              foreground="white").pack(anchor=tk.W)
     top.transient(window)
     top.grab_set()
     top.focus_set()
@@ -117,15 +144,17 @@ combo = ttk.Combobox(window, textvariable=current_func,
 combo.grid(column=3, row=0, pady=3)
 combo.current(0)
 
-tk.Label(window, text="Eps:").grid(column=0, row=1, pady=3)
-entry = tk.Entry(window)
-entry.insert(tk.END, '1e-3')
-entry.grid(column=1, row=1, pady=3)
+tk.Button(window, text="Settings", command=func, height=2, width=15, background='black',
+          foreground="white").grid(column=0, row=1, pady=5)
 
-tk.Label(window, text="Start").grid(column=2, row=1, pady=3)
-entry = tk.Entry(window)
-entry.insert(tk.END, '0, 0')
-entry.grid(column=3, row=1, pady=3)
+tk.Button(window, text="Launch", command=launch, height=2, width=15, background='green',
+          foreground="white").grid(column=1, row=1, pady=5)
+tk.Button(window, text="Refresh", command=refresh, height=2, width=15, background='black',
+          foreground="white").grid(column=2, row=1, pady=5)
+current_action = tk.StringVar()
+comboMethod = ttk.Combobox(window, textvariable=current_action, values=values.actions, state="readonly")
+comboMethod.grid(column=3, row=1, pady=3)
+comboMethod.current(0)
 
 tk.Label(window, text="Zoom").grid(column=0, row=2)
 zoom_entry = tk.Scale(window, from_=1, to=200, len=400, orient=tk.HORIZONTAL, resolution=1)
@@ -138,27 +167,47 @@ plot_widget.grid(column=0, row=4, columnspan=4)
 ax = fig.add_subplot(111)
 paint_main_function()
 
-ttk.Label(window, text="Min x:").grid(column=0, row=5, pady=3)
-ttk.Label(window, text="Min y:").grid(column=1, row=5, pady=3)
-ttk.Label(window, text="Steps:").grid(column=2, row=5, pady=3)
-min_x_label = ttk.Label(window, text='not calculated')
-min_y_label = ttk.Label(window, text='not calculated')
-steps_label = ttk.Label(window, text='not calculated')
-min_x_label.grid(column=0, row=6, pady=3)
-min_y_label.grid(column=1, row=6, pady=3)
-steps_label.grid(column=2, row=6, pady=3)
+tk.Button(window, text="Stepping", command=func, height=2, width=15).grid(column=0, row=5, pady=5)
+tk.Button(window, text="Prev", command=func, height=2, width=15).grid(column=1, row=5, pady=5)
+tk.Button(window, text="Next", command=launch, height=2, width=15).grid(column=2, row=5, pady=5)
+tk.Button(window, text="All", command=refresh, height=2, width=15).grid(column=3, row=5, pady=5)
 
-current_action = tk.StringVar()
-comboMethod = ttk.Combobox(window, textvariable=current_action, values=values.actions, state="readonly")
-comboMethod.grid(column=0, row=7, pady=3)
-comboMethod.current(0)
+frame_gui_settings = tk.Frame()
+var_lines = tk.BooleanVar
+var_arrows = tk.BooleanVar
+var_axis = tk.BooleanVar
+var_text = tk.BooleanVar
+tk.Checkbutton(frame_gui_settings, text="Lines",
+               variable=var_lines,
+               onvalue=1, offvalue=0,
+               command=refresh).pack(anchor=tk.W)
+tk.Checkbutton(frame_gui_settings, text="Arrows",
+               variable=var_lines,
+               onvalue=1, offvalue=0,
+               command=refresh).pack(anchor=tk.W)
+tk.Checkbutton(frame_gui_settings, text="Axis",
+               variable=var_lines,
+               onvalue=1, offvalue=0,
+               command=refresh).pack(anchor=tk.W)
+tk.Checkbutton(frame_gui_settings, text="Text",
+               variable=var_lines,
+               onvalue=1, offvalue=0,
+               command=refresh).pack(anchor=tk.W)
+frame_gui_settings.grid(column=0, row=6)
 
-launch_btn = tk.Button(window, text="Launch", command=launch, height=2, width=20, background='black',
-                       foreground="white")
-launch_btn.grid(column=1, row=7, pady=3)
+frame_views = tk.Frame()
+ttk.Label(frame_views, text="Min x:").pack(anchor=tk.W)
+ttk.Label(frame_views, text="Min y:").pack(anchor=tk.W)
+ttk.Label(frame_views, text="Steps:").pack(anchor=tk.W)
+frame_views.grid(column=1, row=6)
 
-launch_btn = tk.Button(window, text="Refresh", command=refresh, height=2, width=15, background='black',
-                       foreground="white")
-launch_btn.grid(column=2, row=7, pady=3)
+frame_res = tk.Frame()
+min_x_label = ttk.Label(frame_res, text='not calculated')
+min_y_label = ttk.Label(frame_res, text='not calculated')
+steps_label = ttk.Label(frame_res, text='not calculated')
+min_x_label.pack(anchor=tk.W)
+min_y_label.pack(anchor=tk.W)
+steps_label.pack(anchor=tk.W)
+frame_res.grid(column=2, row=6, columnspan=2)
 
 window.mainloop()
