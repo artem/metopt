@@ -1,3 +1,5 @@
+import static java.lang.Double.NaN;
+
 public class GradientDescent {
 
     AbstractFunction fn;
@@ -11,12 +13,9 @@ public class GradientDescent {
     // не тестировал
     public double process(double lambda, boolean normalGrad) throws MatrixException {
         Matrix x = Matrix.mul(Matrix.sum(fn.start, fn.end), .5);
-        while (true) {
+        double fx = fn.eval(x);
+        for (int i = 0; i < 3000; i++) {
             Matrix gradient = fn.gradient(x);
-            System.out.println("gradient, len = " + gradient.len());
-            System.out.println(gradient);
-            double fx = fn.eval(x);
-            System.out.println("f(x) " + fx);
             if (gradient.len() < gradEps) {
                 return fx;
             }
@@ -24,11 +23,7 @@ public class GradientDescent {
                 gradient = Matrix.mul(gradient, 1/gradient.len());
             while (true) {
                 Matrix y = Matrix.sum(x, Matrix.mul(gradient, -lambda));
-                System.out.println("y:");
-                System.out.println(y);
                 double fy = fn.eval(y);
-                System.out.println("f(y):");
-                System.out.println(fy);
                 if (fy < fx) {
                     x = y;
                     fx = fy;
@@ -38,5 +33,6 @@ public class GradientDescent {
                 }
             }
         }
+        return NaN;
     }
 }
