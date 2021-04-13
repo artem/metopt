@@ -55,6 +55,14 @@ public class Matrix {
         return result;
     }
 
+    public static Matrix mul(Matrix m1, double v) {
+        Matrix result = new Matrix(m1.m, m1.n);
+        for (int i = 0; i < m1.m; ++i)
+            for (int j = 0; j < m1.n; ++j)
+                result.set(i, j, result.get(i, j) * v);
+        return result;
+    }
+
     public static Matrix sum(Matrix m1, Matrix m2) throws MatrixException {
         if (m1.m != m2.m || m1.n != m2.n) {
             throw new MatrixException("Matrices of different sizes");
@@ -64,6 +72,21 @@ public class Matrix {
             for (int j = 0; j < m1.n; ++j)
                 result.set(i, j, m1.get(i, j) + m2.get(i, j));
         return result;
+    }
+
+    public Matrix invert() {
+        Matrix result = new Matrix(m, n);
+        for (int i = 0; i < m; ++i)
+            for (int j = 0; j < n; ++j)
+                result.set(i, j, -result.get(i, j));
+        return result;
+    }
+
+    public double len() throws MatrixException {
+        if (m != 1) {
+            throw new MatrixException("Not a vector");
+        }
+        return Math.sqrt(data.get(0).stream().map(x -> x * x).reduce(.0, Double::sum));
     }
 
     public Double get(int y, int x) {
