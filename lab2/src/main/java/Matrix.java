@@ -1,4 +1,3 @@
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -12,6 +11,16 @@ public class Matrix {
         n = 0;
         m = 0;
         data = new ArrayList<>();
+    }
+
+    Matrix(List<Double> vector, boolean vertical) {
+        data = new ArrayList<>();
+        n = vector.size();
+        m = n > 0 ? 1 : 0;
+        data.add(new ArrayList<>(vector));
+        if (vertical) {
+            transpose();
+        }
     }
 
     Matrix(List<List<Double>> data) {
@@ -33,7 +42,7 @@ public class Matrix {
     }
 
     public static double scalar(Matrix m1, Matrix m2) throws MatrixException {
-        if (m1.m != 1 || m2.m != 1 || m1.n != m2.n) {
+        if ((m1.m != 1 || m2.m != 1 || m1.n != m2.n) && (m1.n != 1 || m2.n != 1 || m1.m != m2.m)) {
             throw new MatrixException("wrong matrix sizes");
         }
         double res = 0;
@@ -45,7 +54,7 @@ public class Matrix {
 
     public static Matrix mul(Matrix m1, Matrix m2) throws MatrixException {
         if (m1.n != m2.m) {
-            throw new MatrixException("wrong matrix sizes: m1.n !+ m2.m");
+            throw new MatrixException(String.format("wrong matrix sizes: m1.n (%d) != m2.m (%d)", m1.n, m2.m));
         }
         Matrix result = new Matrix(m1.m, m2.n);
         for (int i = 0; i < m1.m; ++i)
@@ -83,10 +92,10 @@ public class Matrix {
     }
 
     public double len() throws MatrixException {
-        if (m != 1) {
+        if (m != 1 && n != 1) {
             throw new MatrixException("Not a vector");
         }
-        return Math.sqrt(data.get(0).stream().map(x -> x * x).reduce(.0, Double::sum));
+        return Math.sqrt((m == 1 ? data : T().data).get(0).stream().map(x -> x * x).reduce(.0, Double::sum));
     }
 
     public Double get(int y, int x) {
@@ -103,13 +112,13 @@ public class Matrix {
 
     public Matrix T() {
         Matrix matrix = new Matrix(n, m);
-        for (int i = 0; i < m; i++)
-            for (int j = 0; j < n; j++)
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
                 matrix.set(i, j, get(j, i));
         return matrix;
     }
 
-    public void Transpose() {
+    public void transpose() {
         data = T().data;
         int t = m;
         m = n;
