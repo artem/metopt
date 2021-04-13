@@ -4,12 +4,12 @@ public class SteepestDescent {
     private final AbstractFunction f;
     private final double eps;
 
-    public SteepestDescent(AbstractFunction f, double eps) {
+    public SteepestDescent(final AbstractFunction f, final double eps) {
         this.f = f;
         this.eps = eps;
     }
 
-    private double goldenRatio(AbstractFunction fun, double epsLim, double from, double to) throws MatrixException {
+    private double goldenRatio(final AbstractFunction fun, final double epsLim, final double from, final double to) {
         final double Tau = (Math.sqrt(5) - 1) / 2;
         double I = (to - from) * Tau;
         double[] x = new double[]{to - I, from + I};
@@ -30,24 +30,27 @@ public class SteepestDescent {
     }
 
     public Matrix process() throws MatrixException {
-        int iterations = 1;
+        final Trace result = new Trace(f);
+
         Matrix x = Matrix.mul(Matrix.sum(f.start, f.end), 0.5);
         Matrix p = f.gradient(x).invert();
+        result.add(x);
+
         while (p.len() > eps) {
-            Matrix finalX = x;
-            Matrix finalP = p;
-            AbstractFunction g = new AbstractFunction() {
+            final Matrix finalX = x;
+            final Matrix finalP = p;
+            final AbstractFunction g = new AbstractFunction() {
                 @Override
                 double eval(Matrix m) throws MatrixException {
                     return f.eval(Matrix.sum(finalX, Matrix.mul(finalP, m.get(0, 0))));
                 }
             };
-            double a = goldenRatio(g, eps, 0, 1000000);
+            final double a = goldenRatio(g, eps, 0, 1000000);
             x = Matrix.sum(x, Matrix.mul(p, a));
             p = f.gradient(x).invert();
-            ++iterations;
+            result.add(x);
         }
-        System.out.println("steepest descent took " + iterations + " iterations.");
+        System.out.println("steepest descent took " + result.getSteps().size() + " iterations.");
         return x;
     }
 

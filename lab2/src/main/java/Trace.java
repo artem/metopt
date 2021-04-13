@@ -7,11 +7,11 @@ public class Trace {
     private final AbstractFunction function;
     private final ArrayList<Matrix> steps = new ArrayList<>();
 
-    public Trace(AbstractFunction fun) {
+    public Trace(final AbstractFunction fun) {
         this.function = fun;
     }
 
-    public void add(Matrix x) {
+    public void add(final Matrix x) {
         steps.add(x);
     }
 

@@ -1,5 +1,3 @@
-import static java.lang.Double.NaN;
-
 public class GradientDescent {
     private final AbstractFunction fn;
     private final double gradEps;
