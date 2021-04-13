@@ -20,7 +20,7 @@ public class SteepestDescent {
             Matrix finalX = x;
             Matrix finalP = p;
             UnaryOperator<Double> g1 = z -> f.eval(Matrix.sum(finalX, Matrix.mul(finalP, z)));
-            double a = SingleDimensionMethods.parabola(g1, eps, 0, 1000000);
+            double a = SingleDimensionMethods.parabola(g1, eps, 0, 1000000); // TODO
             x = Matrix.sum(x, Matrix.mul(p, a));
             p = f.gradient(x).invert();
             result.add(x);
