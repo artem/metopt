@@ -46,8 +46,12 @@ public class Matrix {
             throw new MatrixException("wrong matrix sizes");
         }
         double res = 0;
-        for (int i = 0; i < m1.n; i++) {
-            res += m1.get(0, i) * m2.get(0, i);
+        if (m1.m == 1) {
+            for (int i = 0; i < m1.n; i++)
+                res += m1.get(0, i) * m2.get(0, i);
+        } else {
+            for (int i = 0; i < m1.m; i++)
+                res += m1.get(i, 0) * m2.get(i, 0);
         }
         return res;
     }

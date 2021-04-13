@@ -2,14 +2,10 @@ public class GradientDescent {
 
     AbstractFunction fn;
     double gradEps;
-    double valueEps;
-    double stepEps;
 
-    public GradientDescent(AbstractFunction fn, double gradEps, double valueEps, double stepEps) {
+    public GradientDescent(AbstractFunction fn, double gradEps) {
         this.fn = fn;
         this.gradEps = gradEps;
-        this.valueEps = valueEps;
-        this.stepEps = stepEps;
     }
 
     // не тестировал
@@ -17,7 +13,10 @@ public class GradientDescent {
         Matrix x = Matrix.mul(Matrix.sum(fn.start, fn.end), .5);
         while (true) {
             Matrix gradient = fn.gradient(x);
+            System.out.println("gradient, len = " + gradient.len());
+            System.out.println(gradient);
             double fx = fn.eval(x);
+            System.out.println("f(x) " + fx);
             if (gradient.len() < gradEps) {
                 return fx;
             }
@@ -25,7 +24,11 @@ public class GradientDescent {
                 gradient = Matrix.mul(gradient, 1/gradient.len());
             while (true) {
                 Matrix y = Matrix.sum(x, Matrix.mul(gradient, -lambda));
+                System.out.println("y:");
+                System.out.println(y);
                 double fy = fn.eval(y);
+                System.out.println("f(y):");
+                System.out.println(fy);
                 if (fy < fx) {
                     x = y;
                     fx = fy;
@@ -34,8 +37,6 @@ public class GradientDescent {
                     lambda /= 2;
                 }
             }
-
         }
     }
-
 }
