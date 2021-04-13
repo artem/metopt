@@ -1,5 +1,5 @@
-public class MatrixException extends Exception {
-    public MatrixException(String message) {
+public class MatrixException extends RuntimeException {
+    public MatrixException(final String message) {
         super(message);
     }
 }
