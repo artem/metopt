@@ -14,24 +14,24 @@ public class ConjugateGradient {
 
         Matrix x = f.x0;
         Matrix grad = f.gradient(x);
-        Matrix p = grad.invert();
+        Matrix p = grad.negated();
         double gradLen = grad.len();
         double gradLenPrev;
 
         result.add(x);
 
-        for (int i = 0; i < x.m; ++i) {
-            final Matrix Ap = Matrix.mul(f.A, p);
-            final double a = gradLen * gradLen / Matrix.scalar(Ap, p);
-            x = Matrix.sum(x, Matrix.mul(p, a));
-            grad = Matrix.sum(grad, Matrix.mul(Ap, a));
+        for (int i = 0; i < x.getN(); ++i) {
+            final Matrix Ap = f.A.mul(p);
+            final double a = gradLen * gradLen / Ap.scalar(p);
+            x.addBy(p.mul(a));
+            grad.addBy(Ap.mul(a));
             gradLenPrev = gradLen;
             gradLen = grad.len();
             double b = gradLen / gradLenPrev;
             b *= b;
-            p = Matrix.sum(grad.invert(), Matrix.mul(p, b));
+            p = grad.negated().addBy(p.mul(b));
 
-            result.add(x);
+            result.add(new Matrix(x));
         }
 
         return result;

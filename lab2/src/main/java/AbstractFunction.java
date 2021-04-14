@@ -3,23 +3,23 @@ import java.util.List;
 
 public abstract class AbstractFunction {
     final public Matrix A;
-    final public Matrix b; // vector
+    final public Vector b;
     final public double c;
-    final public Matrix x0;
+    final public Vector x0;
 
-    public AbstractFunction(final Matrix a, final Matrix b, final double c, final Matrix x0) {
+    public AbstractFunction(final Matrix a, final Vector b, final double c, final Vector x0) {
         A = a;
         this.b = b;
         this.c = c;
         this.x0 = x0;
     }
 
-    double eval(final Matrix x) throws MatrixException {
-        return Matrix.scalar(Matrix.mul(A, x), x) / 2 + Matrix.scalar(b, x) + c;
+    double eval(final Matrix x) {
+        return A.mul(x).scalar(x) / 2 + b.scalar(x) + c;
     }
 
-    Matrix gradient(final Matrix x) throws MatrixException {
-        return Matrix.sum(Matrix.mul(A, x), b);
+    Matrix gradient(final Matrix x) {
+        return A.mul(x).add(b);
     }
 
     private String shortDouble(double d) {
@@ -34,8 +34,8 @@ public abstract class AbstractFunction {
     public String toString() {
         List<String> terms = new ArrayList<>();
         if (A != null) {
-            for (int i = 0; i < A.m; ++i) {
-                for (int j = i; j < A.n; ++j) {
+            for (int i = 0; i < A.getN(); ++i) {
+                for (int j = i; j < A.getM(); ++j) {
                     double aij = A.get(i, j);
                     if (aij != 0.) {
                         if (i != j) {
@@ -48,7 +48,7 @@ public abstract class AbstractFunction {
             }
         }
         if (b != null) {
-            for (int i = 0; i < b.m; ++i) {
+            for (int i = 0; i < b.getM(); ++i) {
                 double bi = b.get(i, 0);
                 if (bi != 0.) {
                     terms.add(shortDouble(bi) + variable(i + 1));

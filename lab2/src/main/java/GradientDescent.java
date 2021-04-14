@@ -23,11 +23,11 @@ public class GradientDescent {
                 return result;
             }
             if (normalGrad) { // замечание к алгоритму, как возможный вариант.
-                gradient = Matrix.mul(gradient, 1 / gradient.len());
+                gradient.normalize();
             }
 
             while (lambda != 0) {
-                final Matrix y = Matrix.sum(x, Matrix.mul(gradient, -lambda));
+                final Matrix y = x.add(gradient.mul(-lambda));
                 double fy = fn.eval(y);
                 if (fy < fx) {
                     x = y;
@@ -39,7 +39,6 @@ public class GradientDescent {
                 }
             }
         }
-
         return result;
     }
 }

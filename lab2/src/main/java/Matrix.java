@@ -1,166 +1,179 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Matrix {
-    public int m; // height, rows, y
-    public int n; // width, cols, x
-    private List<ArrayList<Double>> data;
+    protected int n;
+    protected int m;
+    protected List<List<Double>> data;
 
-    Matrix() {
-        n = 0;
-        m = 0;
-        data = new ArrayList<>();
+    public Matrix(int n, int m) {
+        this(IntStream.range(0, n)
+                .mapToObj(i -> new ArrayList<>(Collections.nCopies(m, 0.)))
+                .collect(Collectors.toList()));
     }
 
-    Matrix(List<Double> vector, boolean vertical) {
-        data = new ArrayList<>();
-        n = vector.size();
-        m = n > 0 ? 1 : 0;
-        data.add(new ArrayList<>(vector));
-        if (vertical) {
-            transpose();
+    public Matrix(List<List<Double>> data) {
+        if (data == null) {
+            throw new IllegalArgumentException("null data of new matrix.");
+        }
+        n = data.size();
+        m = n == 0 ? 0 : data.get(0).size();
+        for (int i = 0; i < n; ++i) {
+            if (data.get(i).size() != m) {
+                throw new IllegalArgumentException("Not matrix.");
+            }
+        }
+        this.data = new ArrayList<>(Collections.nCopies(n, null));
+        for (int i = 0; i < n; ++i) {
+            this.data.set(i, new ArrayList<>(List.copyOf(data.get(i))));
         }
     }
 
-    Matrix(List<List<Double>> data) {
-        this.data = new ArrayList<>();
-        for (List<Double> sublist : data) {
-            this.data.add(new ArrayList<>(sublist));
-        }
-        m = data.size();
-        n = data.size() > 0 ? data.get(0).size() : 0;
+    public Matrix(Matrix other) {
+        this(IntStream.range(0, other.n)
+                .mapToObj(i -> new ArrayList<>(other.data.get(i)))
+                .collect(Collectors.toList()));
     }
 
-    Matrix(int m, int n) {
-        data = new ArrayList<>();
-        for (int i = 0; i < m; i++) {
-            data.add(IntStream.range(0, n).mapToObj(x -> 0.).collect(Collectors.toCollection(ArrayList::new)));
-        }
-        this.m = m;
-        this.n = n;
+    public int getN() {
+        return n;
     }
 
-    public static double scalar(Matrix m1, Matrix m2) throws MatrixException {
-        if ((m1.m != 1 || m2.m != 1 || m1.n != m2.n) && (m1.n != 1 || m2.n != 1 || m1.m != m2.m)) {
-            throw new MatrixException("wrong matrix sizes");
-        }
-        double res = 0;
-        if (m1.m == 1) {
-            for (int i = 0; i < m1.n; i++)
-                res += m1.get(0, i) * m2.get(0, i);
-        } else {
-            for (int i = 0; i < m1.m; i++)
-                res += m1.get(i, 0) * m2.get(i, 0);
-        }
-        return res;
+    public int getM() {
+        return m;
     }
 
-    public static Matrix mul(Matrix m1, Matrix m2) throws MatrixException {
-        if (m1.n != m2.m) {
-            throw new MatrixException(String.format("wrong matrix sizes: m1.n (%d) != m2.m (%d)", m1.n, m2.m));
-        }
-        Matrix result = new Matrix(m1.m, m2.n);
-        for (int i = 0; i < m1.m; ++i)
-            for (int j = 0; j < m2.n; ++j)
-                for (int k = 0; k < m1.n; ++k)
-                    result.addTo(i, j, m1.get(i, k) * m2.get(k, j));
-        return result;
+    public double get(int i, int j) {
+        return data.get(i).get(j);
     }
 
-    public static Matrix mul(Matrix m1, double v) {
-        Matrix result = new Matrix(m1.m, m1.n);
-        for (int i = 0; i < m1.m; ++i)
-            for (int j = 0; j < m1.n; ++j)
-                result.set(i, j, m1.get(i, j) * v);
-        return result;
-    }
-
-    public static Matrix sum(Matrix m1, Matrix m2) throws MatrixException {
-        if (m1.m != m2.m || m1.n != m2.n) {
-            throw new MatrixException("Matrices of different sizes");
-        }
-        Matrix result = new Matrix(m1.m, m1.n);
-        for (int i = 0; i < m1.m; ++i)
-            for (int j = 0; j < m1.n; ++j)
-                result.set(i, j, m1.get(i, j) + m2.get(i, j));
-        return result;
-    }
-
-    public Matrix invert() {
-        Matrix result = new Matrix(m, n);
-        for (int i = 0; i < m; ++i)
-            for (int j = 0; j < n; ++j)
-                result.set(i, j, -this.get(i, j));
-        return result;
-    }
-
-    public double len() throws MatrixException {
-        if (m != 1 && n != 1) {
-            throw new MatrixException("Not a vector");
-        }
-        return Math.sqrt((m == 1 ? data : T().data).get(0).stream().map(x -> x * x).reduce(.0, Double::sum));
-    }
-
-    public Double get(int y, int x) {
-        return data.get(y).get(x);
-    }
-
-    public void set(int y, int x, double value) {
-        data.get(y).set(x, value);
-    }
-
-    public void addTo(int y, int x, double value) {
-        data.get(y).set(x, data.get(y).get(x) + value);
+    public void set(int i, int j, double value) {
+        data.get(i).set(j, value);
     }
 
     public Matrix T() {
-        Matrix matrix = new Matrix(n, m);
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < m; j++)
-                matrix.set(i, j, get(j, i));
-        return matrix;
+        Matrix result = new Matrix(m, n);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                result.set(j, i, get(i, j));
+            }
+        }
+        return result;
     }
 
-    public void transpose() {
-        data = T().data;
-        int t = m;
-        m = n;
-        n = t;
+    public Matrix negated() {
+        Matrix result = new Matrix(n, m);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                result.set(i, j, -get(i, j));
+            }
+        }
+        return result;
+    }
+
+    public Matrix add(Matrix other) {
+        if (n != other.n || m != other.m) {
+            throw new IllegalArgumentException("Incompatible matrices.");
+        }
+        Matrix result = new Matrix(n, m);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                result.set(i, j, get(i, j) + other.get(i, j));
+            }
+        }
+        return result;
+    }
+
+    public Matrix mul(double k) {
+        Matrix result = new Matrix(n, m);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                result.set(i, j, get(i, j) * k);
+            }
+        }
+        return result;
+    }
+
+    public Matrix mul(Matrix other) {
+        if (m != other.n) {
+            throw new IllegalArgumentException("Incompatible matrices.");
+        }
+        Matrix result = new Matrix(n, other.m);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < other.m; ++j) {
+                double c = 0.;
+                for (int k = 0; k < m; ++k) {
+                    c += get(i, k) * other.get(k, j);
+                }
+                result.set(i, j, c);
+            }
+        }
+        return result;
+    }
+
+    public double scalar(Matrix other) {
+        if (m != 1 || other.m != 1) {
+            throw new IllegalArgumentException("Scalar multiplication of non-vectors.");
+        }
+        if (n != other.n) {
+            throw new IllegalArgumentException("Incompatible matrices.");
+        }
+        double result = 0.;
+        for (int i = 0; i < n; ++i) {
+            result += get(i, 0) * other.get(i, 0);
+        }
+        return result;
+    }
+
+    public double len() {
+        return Math.sqrt(scalar(this));
+    }
+
+    public void normalize() {
+        divBy(len());
+    }
+
+    public Matrix negate() {
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                set(i, j, -get(i, j));
+            }
+        }
+        return this;
+    }
+
+    public Matrix addBy(Matrix other) {
+        if (n != other.n || m != other.m) {
+            throw new IllegalArgumentException("Incompatible matrices.");
+        }
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                set(i, j, get(i, j) + other.get(i, j));
+            }
+        }
+        return this;
+    }
+
+    public void divBy(double k) {
+        if (k == 0.) {
+            throw new IllegalArgumentException("Division by zero.");
+        }
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                set(i, j, get(i, j) / k);
+            }
+        }
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Matrix: m=").append(m).append(", n=").append(n).append(System.lineSeparator());
-        for (int i = 0; i < m; i++) {
-            sb.append(data.get(i).stream().map(x -> Double.toString(x)).collect(Collectors.joining(", ")));
-            sb.append(System.lineSeparator());
+        StringBuilder result = new StringBuilder(String.format("OldMatrix %dx%d\n", n, m));
+        for (int i = 0; i < n; ++i) {
+            result.append(data.get(i).stream().map(String::valueOf).collect(Collectors.joining(" "))).append("\n");
         }
-        return sb.toString();
-    }
-
-    public static void main(String[] args) {
-        // test
-        List<List<Double>> l1 = Arrays.asList(
-                Arrays.asList(1., 2., 3.),
-                Arrays.asList(1., 2., 3.),
-                Arrays.asList(1., 2., 3.),
-                Arrays.asList(1., 2., 3.)
-        );
-        List<List<Double>> l2 = Arrays.asList(
-                Arrays.asList(4., 2., 3., 8.),
-                Arrays.asList(1., 5., 3., 9.),
-                Arrays.asList(1., 2., 6., 1.)
-        );
-        Matrix a = new Matrix(l1);
-        Matrix b = new Matrix(l2);
-        System.out.println(a.toString());
-        System.out.println(b.toString());
-        try {
-            System.out.println(Matrix.mul(a, b).toString());
-        } catch (MatrixException e) {
-            e.printStackTrace();
-        }
+        return result.toString();
     }
 }

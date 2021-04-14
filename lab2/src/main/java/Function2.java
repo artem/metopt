@@ -4,10 +4,12 @@ public class Function2 extends AbstractFunction {
 
     public Function2() {
         super(
-                new Matrix(List.of(List.of(2 * 254., 506.), List.of(506., 2 * 254.))),
-                new Matrix(List.of(50., 130.), true),
+                new Matrix(List.of(
+                        List.of(2 * 254., 506.),
+                        List.of(506., 2 * 254.))),
+                new Vector(List.of(50., 130.)),
                 111,
-                new Matrix(List.of(0., 0.), true)
+                new Vector(List.of(0., 0.))
         );
     }
 }

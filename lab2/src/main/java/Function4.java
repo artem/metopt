@@ -6,8 +6,8 @@ public class Function4 extends AbstractFunction {
                 List.of(2 * 1., 0., 0.),
                 List.of(0., 2 * 1000., 0.),
                 List.of(0., 0., 2 * 1.))),
-                new Matrix(List.of(0., 0., 0.), true),
+                new Vector(List.of(0., 0., 0.)),
                 0,
-                new Matrix(List.of(100., 100., 100.), true));
+                new Vector(List.of(100., 100., 100.)));
     }
 }

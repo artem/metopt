@@ -5,8 +5,8 @@ public class Function3 extends AbstractFunction {
         super(new Matrix(List.of(
                 List.of(2 * 10., 0.),
                 List.of(0., 2 * 1.))),
-                new Matrix(List.of(0., 0.), true),
+                new Vector(List.of(0., 0.)),
                 0,
-                new Matrix(List.of(10., 10.), true));
+                new Vector(List.of(10., 10.)));
     }
 }
