@@ -1,4 +1,5 @@
 public class GradientDescent {
+    private static final int MAX_ITERATIONS = 5000;
     private final AbstractFunction fn;
     private final double gradEps;
 
@@ -16,7 +17,7 @@ public class GradientDescent {
 
         result.add(x);
 
-        for (int i = 0; i < 3000; i++) {
+        for (int i = 0; i < MAX_ITERATIONS; i++) {
             Matrix gradient = fn.gradient(x);
             if (gradient.len() < gradEps) {
                 return result;
@@ -39,7 +40,6 @@ public class GradientDescent {
             }
         }
 
-        System.err.println("Computation timeout");
         return result;
     }
 }

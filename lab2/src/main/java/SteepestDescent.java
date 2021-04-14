@@ -14,15 +14,19 @@ public class SteepestDescent {
     double maxFactor(Matrix factor, Matrix product) {
         double result = 0;
         for (int i = 0; i < product.m; ++i) {
-            double f1 = Math.abs(product.get(i, 0) / factor.get(i, 0));
-            if (f1 > result && !Double.isInfinite(f1)) {
-                result = f1;
+            double factor1 = factor.get(i, 0);
+            double prod = product.get(i, 0);
+            if (factor1 > 0.) {
+                double factor2 = Math.abs(prod / factor1);
+                if (factor2 > result && !Double.isInfinite(factor2)) {
+                    result = factor2;
+                }
             }
         }
         return result;
     }
 
-    public Matrix process() throws MatrixException {
+    public Trace process() throws MatrixException {
         final Trace result = new Trace(f);
 
         Matrix x = Matrix.mul(Matrix.sum(f.start, f.end), 0.5);
@@ -31,27 +35,20 @@ public class SteepestDescent {
 
         for (int i = 0; i < MAX_ITERATIONS; ++i) {
             if (p.len() < eps) {
-                return x;
+                return result;
             }
             Matrix finalX = x;
             Matrix finalP = p;
             UnaryOperator<Double> g = z -> f.eval(Matrix.sum(finalX, Matrix.mul(finalP, z)));
-            double aUpperBound = Math.max(maxFactor(p, Matrix.sum(f.start, x.invert())),
+            double aUpperBound = Math.max(maxFactor(p.invert(), Matrix.sum(f.start, x.invert()).invert()),
                                           maxFactor(p, Matrix.sum(f.end, x.invert())));
-            double a = SingleDimensionMethods.fib(g, eps, 0, aUpperBound); // TODO
+            double a = SingleDimensionMethods.fib(g, eps, 0, aUpperBound);
             x = Matrix.sum(x, Matrix.mul(p, a));
             p = f.gradient(x).invert();
             result.add(x);
         }
 
-        throw new AssertionError("Processing timeout");
-    }
-
-    public static void main(String[] args)  {
-        try {
-            System.out.println(new SteepestDescent(new Function2(), 1e-5).process());
-        } catch (MatrixException e) {
-            e.printStackTrace();
-        }
+        System.err.println("Computation timeout");
+        return result;
     }
 }

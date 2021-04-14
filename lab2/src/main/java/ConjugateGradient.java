@@ -1,10 +1,12 @@
 public class ConjugateGradient {
     private final AbstractFunction f;
-    private final double eps;
+
+    public ConjugateGradient(AbstractFunction f) {
+        this.f = f;
+    }
 
     public ConjugateGradient(AbstractFunction f, double eps) {
-        this.f = f;
-        this.eps = eps;
+        this(f);
     }
 
     public Trace process() throws MatrixException {
@@ -13,29 +15,25 @@ public class ConjugateGradient {
         Matrix x = Matrix.mul(Matrix.sum(f.start, f.end), 0.5);
         Matrix grad = f.gradient(x);
         Matrix p = grad.invert();
+        double gradLen = grad.len();
+        double gradLenPrev;
 
         result.add(x);
 
         for (int i = 0; i < x.m; ++i) {
-            final double denominator = Matrix.scalar(Matrix.mul(f.A, p), p);
-            final double a = -Matrix.scalar(grad, p) / denominator;
-
+            final Matrix Ap = Matrix.mul(f.A, p);
+            final double a = gradLen * gradLen / Matrix.scalar(Ap, p);
             x = Matrix.sum(x, Matrix.mul(p, a));
-            grad = f.gradient(x);
-            final double b = Matrix.scalar(Matrix.mul(f.A, grad), p) / denominator;
+            grad = Matrix.sum(grad, Matrix.mul(Ap, a));
+            gradLenPrev = gradLen;
+            gradLen = grad.len();
+            double b = gradLen / gradLenPrev;
+            b *= b;
             p = Matrix.sum(grad.invert(), Matrix.mul(p, b));
 
             result.add(x);
         }
 
         return result;
-    }
-
-    public static void main(String[] args) {
-        try {
-            System.out.println(new ConjugateGradient(new Function2(), 1e-5).process());
-        } catch (MatrixException e) {
-            e.printStackTrace();
-        }
     }
 }
