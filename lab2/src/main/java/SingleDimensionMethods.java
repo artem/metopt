@@ -44,11 +44,14 @@ public class SingleDimensionMethods {
     }
 
     private static double randomBottom(UnaryOperator<Double> f, double x1, double x3, double f1, double f3, double eps) {
+        if (x3 - x1 < eps) {
+            return f1 < f3 ? x1 : x3;
+        }
         double x2, f2;
         do {
             x2 = rangeRand(x1, x3);
             f2 = f.apply(x2);
-        } while (x2 - x1 < eps || x3 - x2 < eps);
+        } while (x2 < x1 || x3 < x2);
         if (f2 <= f1 && f2 <= f3) {
             return x2;
         } else if (f2 > f1) {

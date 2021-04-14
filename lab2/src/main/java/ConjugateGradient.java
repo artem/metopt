@@ -12,7 +12,7 @@ public class ConjugateGradient {
     public Trace process() throws MatrixException {
         final Trace result = new Trace(f);
 
-        Matrix x = Matrix.mul(Matrix.sum(f.start, f.end), 0.5);
+        Matrix x = f.x0;
         Matrix grad = f.gradient(x);
         Matrix p = grad.invert();
         double gradLen = grad.len();

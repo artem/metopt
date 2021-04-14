@@ -1,5 +1,5 @@
 public class CustomFunction extends AbstractFunction {
-    public CustomFunction(final Matrix a, final Matrix b, final double c, final Matrix start, final Matrix end) {
-        super(a, b, c, start, end);
+    public CustomFunction(final Matrix a, final Matrix b, final double c, final Matrix x0) {
+        super(a, b, c, x0);
     }
 }

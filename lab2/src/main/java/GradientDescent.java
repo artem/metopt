@@ -12,7 +12,7 @@ public class GradientDescent {
     public Trace process(double lambda, final boolean normalGrad) throws MatrixException {
         final Trace result = new Trace(fn);
 
-        Matrix x = Matrix.mul(Matrix.sum(fn.start, fn.end), .5);
+        Matrix x = fn.x0;
         double fx = fn.eval(x);
 
         result.add(x);
@@ -26,7 +26,7 @@ public class GradientDescent {
                 gradient = Matrix.mul(gradient, 1 / gradient.len());
             }
 
-            while (true) {
+            while (lambda != 0) {
                 final Matrix y = Matrix.sum(x, Matrix.mul(gradient, -lambda));
                 double fy = fn.eval(y);
                 if (fy < fx) {
