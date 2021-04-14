@@ -1,5 +1,5 @@
 public class GradientDescent {
-    private static final int MAX_ITERATIONS = 5000;
+    static final int MAX_ITERATIONS = 5000;
     private final AbstractFunction fn;
     private final double gradEps;
 

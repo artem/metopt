@@ -1,7 +1,7 @@
 import java.util.function.UnaryOperator;
 
 public class SteepestDescent {
-    private static final int MAX_ITERATIONS = 3000;
+    static final int MAX_ITERATIONS = 3000;
 
     private final AbstractFunction f;
     private final double eps;
