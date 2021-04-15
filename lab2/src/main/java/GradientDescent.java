@@ -2,7 +2,7 @@ public class GradientDescent implements Method{
     static final int MAX_ITERATIONS = 5000;
     private final AbstractFunction fn;
     private final double gradEps;
-    private double lambda;
+    private double lambda = 1;
     private boolean normalGrad;
 
     public GradientDescent(final AbstractFunction fn, final double gradEps, final double lambda, final boolean normalGrad) {

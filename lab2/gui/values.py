@@ -4,12 +4,12 @@ import numpy as np
 class Function:
     def __init__(self, a, b, c, d=""):
         self.description = d
-        self.a: np.ndarray = a
-        self.b: np.ndarray = b
+        self.a = np.array(a)
+        self.b = np.array(b)
         self.c: float = c
 
     def eval(self, x: np.ndarray):
-        return self.a.dot(x).dot(x)/2 + self.b.dot(x) + self.c
+        return self.a.dot(x).dot(x)/2 + self.b.T.dot(x) + self.c
 
 
 a1 = np.array([[128, 126], [126, 128]], dtype=float)
@@ -35,4 +35,4 @@ colors = ["b",
 actions = ["Execute method",
            "Measure the iterations"]
 
-jar_path = "../build/distributions/lib/metopt-0.1-all.jar"
+jar_path = "../build/distributions/lib/lab2-0.1-all.jar"

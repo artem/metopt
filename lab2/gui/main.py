@@ -1,3 +1,4 @@
+import random
 import tkinter as tk
 from tkinter import ttk
 import numpy as np
@@ -13,23 +14,23 @@ import matplotlib
 
 class GUI:
     def __init__(self):
-        self.left_side = -1
-        self.right_side = 1
+        self.center = [0, 0]
+        self.radius = 100.
+        self.size = 100.
 
         self.method = None
+        self.functionId = None
+        self.function: values.Function = None
         self.steps = None
-        self.x_min = None
-        self.y_min = None
-        self.l = -1
-        self.r = 1
 
         self.settings = {
             'eps': '1e-3',
             'start': '0 0',
-            'alpha': '1'
+            'alpha': '1',
+            'ng': '0'
         }
 
-        self.cur_data = None
+        self.data = None
 
         matplotlib.use('TkAgg')
         self.window = tk.Tk()
@@ -37,15 +38,15 @@ class GUI:
         # window.geometry('640x640')
 
         tk.Label(self.window, text='Метод').grid(column=0, row=0, pady=3)
-        self.current_method = tk.StringVar()
-        method_selector = ttk.Combobox(self.window, textvariable=self.current_method, values=values.methods,
+        self.selected_method = tk.StringVar()
+        method_selector = ttk.Combobox(self.window, textvariable=self.selected_method, values=values.methods,
                                        state='readonly')
         method_selector.grid(column=1, row=0, pady=3)
         method_selector.current(0)
 
         tk.Label(self.window, text='Фун.').grid(column=2, row=0, pady=3)
-        self.current_func = tk.StringVar()
-        func_selector = ttk.Combobox(self.window, textvariable=self.current_func,
+        self.selected_function = tk.StringVar()
+        func_selector = ttk.Combobox(self.window, textvariable=self.selected_function,
                                      values=[x.description for x in values.functions], state='readonly')
         func_selector.grid(column=3, row=0, pady=3)
         func_selector.current(0)
@@ -54,7 +55,7 @@ class GUI:
                   foreground='white').grid(column=0, row=1, pady=5)
         tk.Button(self.window, text='Launch', command=self.launch, height=2, width=15, background='green',
                   foreground='white').grid(column=1, row=1, pady=5)
-        tk.Button(self.window, text='Refresh', command=self.refresh, height=2, width=15, background='black',
+        tk.Button(self.window, text='Refresh', command=self.paint_main_function, height=2, width=15, background='black',
                   foreground='white').grid(column=2, row=1, pady=5)
 
         self.current_action = tk.StringVar()
@@ -68,38 +69,40 @@ class GUI:
         self.zoom_entry.grid(column=1, row=2, columnspan=3, pady=3)
 
         self.fig = plt.figure(1)
-        canvas = FigureCanvasTkAgg(self.fig, master=self.window)
-        plot_widget = canvas.get_tk_widget()
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.window)
+        plot_widget = self.canvas.get_tk_widget()
         plot_widget.grid(column=0, row=4, columnspan=4)
-        self.ax = self.fig.add_subplot(111)
-        self.paint_main_function()
 
         tk.Button(self.window, text='Stepping', command=self.func, height=2, width=15).grid(column=0, row=5, pady=5)
         tk.Button(self.window, text='Prev', command=self.func, height=2, width=15).grid(column=1, row=5, pady=5)
         tk.Button(self.window, text='Next', command=self.launch, height=2, width=15).grid(column=2, row=5, pady=5)
-        tk.Button(self.window, text='All', command=self.refresh, height=2, width=15).grid(column=3, row=5, pady=5)
+        tk.Button(self.window, text='All', command=self.paint_main_function, height=2, width=15).grid(column=3, row=5, pady=5)
 
         frame_gui_settings = tk.Frame()
         self.var_lines = tk.BooleanVar()
         self.var_arrows = tk.BooleanVar()
         self.var_axis = tk.BooleanVar()
         self.var_text = tk.BooleanVar()
+        self.var_lines.set(True)
+        self.var_arrows.set(True)
+        self.var_axis.set(True)
+        self.var_text.set(True)
         tk.Checkbutton(frame_gui_settings, text='Lines',
                        variable=self.var_lines,
                        onvalue=1, offvalue=0,
-                       command=self.refresh).pack(anchor=tk.W)
+                       command=self.paint_main_function).pack(anchor=tk.W)
         tk.Checkbutton(frame_gui_settings, text='Arrows',
                        variable=self.var_arrows,
                        onvalue=1, offvalue=0,
-                       command=self.refresh).pack(anchor=tk.W)
+                       command=self.paint_main_function).pack(anchor=tk.W)
         tk.Checkbutton(frame_gui_settings, text='Axis',
                        variable=self.var_axis,
                        onvalue=1, offvalue=0,
-                       command=self.refresh).pack(anchor=tk.W)
+                       command=self.paint_main_function).pack(anchor=tk.W)
         tk.Checkbutton(frame_gui_settings, text='Text',
                        variable=self.var_text,
                        onvalue=1, offvalue=0,
-                       command=self.refresh).pack(anchor=tk.W)
+                       command=self.paint_main_function).pack(anchor=tk.W)
         frame_gui_settings.grid(column=0, row=6)
 
         frame_views = tk.Frame()
@@ -119,34 +122,50 @@ class GUI:
 
     def launch(self):
         action = values.actions.index(self.current_action.get())
+        if action == 0:
+            self.method = values.methods.index(self.selected_method.get())
+            for i, f in enumerate(values.functions):
+                if f.description == self.selected_function.get():
+                    self.functionId = i
+                    break
+            self.function, self.data = query.call(self.method, self.functionId, eps=self.settings['eps'],
+                                                  alpha=self.settings['alpha'], ng=self.settings['ng'])
+            self.function.description = values.functions[self.functionId].description
+            self.center = (self.data[-1]["data"][1][0], self.data[-1]["data"][0][0])
+            self.paint_main_function()
 
     def paint_main_function(self):
-        self.fig.clf()
-        xs = np.linspace(self.left_side, self.right_side, 100)
-        # ys = values.function(xs)
-        # ax = fig.add_subplot(111)
-        # diff = max(ys) - min(ys)
-        # ax.axis([left_side, right_side, min(ys) - diff * 0.1, max(ys)])
-        # ax.plot(xs, ys)
-        # fig.canvas.draw()
-
-    def refresh(self):
-        if not self.steps:
+        if not self.function or self.function.b.shape[0] != 2:
             return
-        zoom = (int(self.zoom_entry.get()) ** 3)
+        plt.cla()
+        plt.clf()
 
-        self.left_side = self.x_min - (self.x_min - self.l) / zoom
-        self.right_side = self.x_min + (self.r - self.x_min) / zoom
-        if zoom != 1:
-            perf = min(self.right_side - self.x_min, self.x_min - self.left_side)
-            self.left_side = (self.left_side + self.x_min - perf) / 2
-            self.right_side = (self.right_side + self.x_min + perf) / 2
+        zoom = (int(self.zoom_entry.get()) ** 2)
+        self.radius = self.size/zoom
+        x = np.arange(self.center[0] - self.radius, self.center[0] + self.radius, self.radius / 50)
+        y = np.arange(self.center[1] - self.radius, self.center[1] + self.radius, self.radius / 50)
+        Z = np.array([[self.function.eval(np.array([i, j]).T)[0] for j in x] for i in y])
+        self.fig = imshow(Z, cmap=cm.RdBu, extent=(x[0], x[-1], y[-1], y[0]))
+        mini = Z.min()
+        maxi = Z.max()
+        if self.var_lines.get():
+            cset = contour(Z, np.arange(mini, maxi, (maxi-mini)/10), linewidths=2, cmap=cm.Set2, extent=(x[0], x[-1], y[0], y[-1]))
+            clabel(cset, inline=True, fmt='%1.1f', fontsize=10)
+        if self.var_text.get():
+            title(self.function.description)
+        if not self.var_axis.get():
+            plt.axis('off')
+        else:
+            colorbar(self.fig)
+        self.canvas.draw()
+
 
     def func(self):
         def save():
             self.settings['eps'] = eps.get()
             self.settings['start'] = start.get().split()
             self.settings['alpha'] = alpha.get()
+            self.settings['ng'] = norm.get()
             top.destroy()
 
         top = tk.Toplevel(self.window)
@@ -162,6 +181,10 @@ class GUI:
         alpha = tk.Entry(top)
         alpha.insert(tk.END, self.settings['alpha'])
         alpha.pack(anchor=tk.W)
+        tk.Label(top, text='Normalized gradient').pack(anchor=tk.W)
+        norm = tk.Entry(top)
+        norm.insert(tk.END, self.settings['ng'])
+        norm.pack(anchor=tk.W)
         tk.Button(top, text='save', command=save, height=2, width=20, background='grey',
                   foreground='white').pack(anchor=tk.W)
         top.transient(self.window)
