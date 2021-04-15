@@ -38,7 +38,7 @@ public class Trace {
 
         final String points = steps.stream().map(
                 p -> String.format(Locale.US, "{%.2f, %.2f}", p.get(0, 0), p.get(1, 0))
-        ).collect(Collectors.joining(", "));
+        ).distinct().collect(Collectors.joining(", "));
 
         return "{" + points + "}";
     }
