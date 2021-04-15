@@ -31,9 +31,9 @@ public class Tests {
         for (int i = 0; i < functions.size(); ++i) {
             AbstractFunction f = functions.get(i);
             sb.append(String.format("         $F_%d$ & ", i + 1));
-            addEntry(sb, new GradientDescent(f, eps).process(1, false), f);
+            addEntry(sb, new GradientDescent(f, eps, 1, false).process(), f);
             sb.append(" & ");
-            addEntry(sb, new GradientDescent(f, eps).process(1, true), f);
+            addEntry(sb, new GradientDescent(f, eps, 1, true).process(), f);
             sb.append(" & ");
             addEntry(sb, new SteepestDescent(f, eps).process(), f);
             sb.append(" & ");

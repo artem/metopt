@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import numpy as np
+from pylab import cm, imshow, contour, clabel, colorbar, axis, title, show
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -34,37 +35,9 @@ def calc_method(met):
     return result
 
 
-def calc_nums():
-    global ax
-    result = {name: calc_method(i) for i, name in enumerate(values.methods)}
-    fig.clf()
-    ax = fig.add_subplot(111)
-    ind = 0
-    for name, vls in result.items():
-        print(name, vls)
-        color = values.colors[values.methods.index(name)]
-        ax.plot([i + 1 for i in range(len(vls))], vls, color)
-        ax.text(ind * 2 + 1, vls[2 * ind], name, fontsize=6, bbox={'facecolor': color, 'alpha': 0.2})
-        ind += 1
-    ax.set_xlabel('Eps = 1e-x')
-    ax.set_ylabel('Число вычислений функции')
-    fig.canvas.draw()
-
-
 def launch():
     global min_x_label, min_y_label, steps, x_min, y_min
     action = values.actions.index(current_action.get())
-    if action == 0:
-        eps = float(entry.get())
-        ind = values.methods.index(current_method.get())
-        x_min, y_min, steps = query.call(ind, eps)
-        refresh()
-    elif action == 1:
-        calc_nums()
-        x_min, y_min, steps = "Not available", "Not available", []
-    min_x_label['text'] = x_min
-    min_y_label['text'] = y_min
-    steps_label['text'] = len(steps)
 
 
 def paint_main_function():

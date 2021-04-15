@@ -1,4 +1,4 @@
-public class ConjugateGradient {
+public class ConjugateGradient implements Method {
     private final AbstractFunction f;
 
     public ConjugateGradient(AbstractFunction f) {

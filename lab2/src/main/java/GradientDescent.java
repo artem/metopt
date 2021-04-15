@@ -1,15 +1,16 @@
-public class GradientDescent {
+public class GradientDescent implements Method{
     static final int MAX_ITERATIONS = 5000;
     private final AbstractFunction fn;
     private final double gradEps;
+    private double lambda;
+    private boolean normalGrad;
 
-    public GradientDescent(final AbstractFunction fn, final double gradEps) {
+    public GradientDescent(final AbstractFunction fn, final double gradEps, final double lambda, final boolean normalGrad) {
         this.fn = fn;
         this.gradEps = gradEps;
     }
 
-    // не тестировал
-    public Trace process(double lambda, final boolean normalGrad) throws MatrixException {
+    public Trace process() throws MatrixException {
         final Trace result = new Trace(fn);
 
         Matrix x = fn.x0;

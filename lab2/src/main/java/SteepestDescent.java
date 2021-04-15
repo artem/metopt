@@ -1,6 +1,6 @@
 import java.util.function.UnaryOperator;
 
-public class SteepestDescent {
+public class SteepestDescent implements Method {
     static final int MAX_ITERATIONS = 25_000;
 
     private final AbstractFunction f;

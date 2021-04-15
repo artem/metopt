@@ -139,28 +139,4 @@ public class OldMatrix {
         }
         return sb.toString();
     }
-
-    public static void main(String[] args) {
-        // test
-        List<List<Double>> l1 = Arrays.asList(
-                Arrays.asList(1., 2., 3.),
-                Arrays.asList(1., 2., 3.),
-                Arrays.asList(1., 2., 3.),
-                Arrays.asList(1., 2., 3.)
-        );
-        List<List<Double>> l2 = Arrays.asList(
-                Arrays.asList(4., 2., 3., 8.),
-                Arrays.asList(1., 5., 3., 9.),
-                Arrays.asList(1., 2., 6., 1.)
-        );
-        OldMatrix a = new OldMatrix(l1);
-        OldMatrix b = new OldMatrix(l2);
-        System.out.println(a.toString());
-        System.out.println(b.toString());
-        try {
-            System.out.println(OldMatrix.mul(a, b).toString());
-        } catch (MatrixException e) {
-            e.printStackTrace();
-        }
-    }
 }
