@@ -48,7 +48,7 @@ public abstract class AbstractFunction {
             }
         }
         if (b != null) {
-            for (int i = 0; i < b.getM(); ++i) {
+            for (int i = 0; i < b.getN(); ++i) {
                 double bi = b.get(i, 0);
                 if (bi != 0.) {
                     terms.add(shortDouble(bi) + variable(i + 1));
