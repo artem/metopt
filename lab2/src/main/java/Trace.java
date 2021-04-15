@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class Trace {
@@ -36,7 +37,7 @@ public class Trace {
         }
 
         final String points = steps.stream().map(
-                p -> String.format("{%.2f, %.2f}", p.get(0, 0), p.get(1, 0))
+                p -> String.format(Locale.US, "{%.2f, %.2f}", p.get(0, 0), p.get(1, 0))
         ).collect(Collectors.joining(", "));
 
         return "{" + points + "}";

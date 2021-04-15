@@ -22,7 +22,7 @@ public class SteepestDescent implements Method {
 
         Matrix x = f.x0;
         Matrix p = f.gradient(x).negate();
-        result.add(x);
+        result.add(new Matrix(x));
 
         for (int i = 0; i < MAX_ITERATIONS; ++i) {
             if (p.len() < eps) {
