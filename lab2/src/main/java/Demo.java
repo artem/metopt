@@ -49,7 +49,7 @@ public class Demo {
                     break;
                 default:
                     printHelp();
-                    break;
+                    return;
             }
         }
         Method method = null;

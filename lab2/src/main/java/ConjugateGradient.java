@@ -18,7 +18,7 @@ public class ConjugateGradient implements Method {
         double gradLen = grad.len();
         double gradLenPrev;
 
-        result.add(x);
+        result.add(new Matrix(x));
 
         for (int i = 0; i < x.getN(); ++i) {
             final Matrix Ap = f.A.mul(p);
