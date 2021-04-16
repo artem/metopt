@@ -14,4 +14,5 @@ def call(method, function, eps=0.001, ng=0, alpha=1):
     js = json.loads(inp)
     jsf = js['function']
     func = values.Function(jsf['A']['data'], jsf['b']['data'], jsf['c'])
-    return func, js['steps']
+    steps = np.array([x['data'] for x in js['steps']])
+    return func, steps

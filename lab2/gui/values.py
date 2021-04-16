@@ -9,7 +9,7 @@ class Function:
         self.c: float = c
 
     def eval(self, x: np.ndarray):
-        return self.a.dot(x).dot(x)/2 + self.b.T.dot(x) + self.c
+        return self.a.dot(x).T.dot(x)/2 + self.b.T.dot(x) + self.c
 
 
 a1 = np.array([[128, 126], [126, 128]], dtype=float)
