@@ -1,7 +1,9 @@
+import os
 import tkinter as tk
 from tkinter import ttk
 import numpy as np
 from pylab import cm, imshow, contour, clabel, colorbar, title, show
+import json
 from function import Function
 
 # from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -23,21 +25,21 @@ class SteppingController:
     def get_radius(self):
         if self.is_active:
             x1, y1 = self.steps[self.current]
-            x2, y2 = self.steps[self.current+1]
-            center = (abs(x2-x1), abs(y2-y1))
-            radius = max(abs(x2-x1), (y2-y1))
-            return center, radius*1.2
+            x2, y2 = self.steps[self.current + 1]
+            center = (abs(x2 - x1), abs(y2 - y1))
+            radius = max(abs(x2 - x1), (y2 - y1))
+            return center, radius * 1.2
         else:
             x1, y1 = self.steps.min(axis=0)
             x2, y2 = self.steps.max(axis=0)
             radius = max(abs(self.steps[-1][0] - x1), abs(self.steps[-1][1] - y1),
                          abs(self.steps[-1][0] - x2), abs(self.steps[-1][1] - y2))
             center = self.steps[-1]
-            return center, radius*1.2
+            return center, radius * 1.2
 
     def next(self):
         if self.is_active:
-            if self.current < self.steps_number-1:
+            if self.current < self.steps_number - 1:
                 self.current += 1
             return self.current
 
@@ -107,12 +109,15 @@ class GUI:
         # self.canvas = FigureCanvasTkAgg(self.fig, master=self.window)
         self.text_editor = tk.Text()
         self.text_editor.grid(column=0, row=4, columnspan=4)
+        scroll = tk.Scrollbar(command=self.text_editor.yview)
+        scroll.grid(column=5, row=4, sticky='nsew')
+        self.text_editor['yscrollcommand'] = scroll.set
 
-        tk.Button(self.window, text='Stepping', command=self.steps_activate, height=2, width=15)\
+        tk.Button(self.window, text='Stepping', command=self.steps_activate, height=2, width=15) \
             .grid(column=0, row=5, pady=5)
         tk.Button(self.window, text='Prev', command=self.steps_prev, height=2, width=15).grid(column=1, row=5, pady=5)
         tk.Button(self.window, text='Next', command=self.steps_next, height=2, width=15).grid(column=2, row=5, pady=5)
-        tk.Button(self.window, text='All', command=self.steps_deactivate, height=2, width=15)\
+        tk.Button(self.window, text='All', command=self.steps_deactivate, height=2, width=15) \
             .grid(column=3, row=5, pady=5)
 
         frame_gui_settings = tk.Frame()
@@ -187,23 +192,32 @@ class GUI:
                     break
             self.function, self.steps = query.call(self.method, self.functionId, eps=self.settings['eps'],
                                                    alpha=self.settings['alpha'], ng=self.settings['ng'])
-            self.function.description = values.functions[self.functionId]
-            self.center = (self.steps[-1][0][0], self.steps[-1][1][0])
-            self.min_x_label['text'] = self.steps[-1].T
-            self.min_y_label['text'] = self.function.eval(self.steps[-1])
-            self.steps_label['text'] = self.steps.shape[0]
-            self.steps_controller = SteppingController(self.steps)
-            self.center, self.size = self.steps_controller.get_radius()
-            self.paint_main_function()
+        elif action == 1:
+            text: str = self.text_editor.get("1.0", 'end-1c')
+            self.function, self.steps = query.call_custom(self.method, text, eps=self.settings['eps'],
+                                                          alpha=self.settings['alpha'], ng=self.settings['ng'])
+        self.text_editor.delete('1.0', 'end')
+        self.text_editor.insert(tk.END, str(self.function))
+        self.text_editor.insert(tk.END, '\n[\n')
+        for i in self.steps:
+            self.text_editor.insert(tk.END, str(i) + '\n')
+        self.text_editor.insert(tk.END, ']')
+        self.function.description = values.functions[self.functionId]
+        self.center = (self.steps[-1][0][0], self.steps[-1][1][0])
+        self.min_x_label['text'] = self.steps[-1].T
+        self.min_y_label['text'] = self.function.eval(self.steps[-1])
+        self.steps_label['text'] = self.steps.shape[0]
+        self.steps_controller = SteppingController(self.steps)
+        self.center, self.size = self.steps_controller.get_radius()
+        self.paint_main_function()
 
     def paint_main_function(self):
         if not self.function or self.function.b.shape[0] != 2:
             return
         plt.cla()
         plt.clf()
-
         zoom = (int(self.zoom_entry.get()) ** 3)
-        self.radius = self.size/zoom
+        self.radius = self.size / zoom
         x = np.arange(self.center[0] - self.radius, self.center[0] + self.radius, self.radius / 50)
         y = np.arange(self.center[1] - self.radius, self.center[1] + self.radius, self.radius / 50)
         z = np.array([[self.function.eval(np.array([j, i]).T)[0] for j in x] for i in y])
@@ -211,7 +225,7 @@ class GUI:
         mini = z.min()
         maxi = z.max()
         if self.var_lines.get():
-            cset = contour(z, np.arange(mini, maxi, (maxi-mini)/10), linewidths=2, cmap=cm.Set2,
+            cset = contour(z, np.arange(mini, maxi, (maxi - mini) / 10), linewidths=2, cmap=cm.Set2,
                            extent=(x[0], x[-1], y[0], y[-1]))
             clabel(cset, inline=True, fmt='%1.1f', fontsize=10)
         if self.var_text.get():
@@ -226,14 +240,14 @@ class GUI:
             for i in range(start_ind, end_ind):
                 a1, b1 = self.steps[i].T[0]
                 a2, b2 = self.steps[i + 1].T[0]
-                if not self.center[0]-self.radius < a1 < self.center[0]+self.radius or \
-                        not self.center[1]-self.radius < b1 < self.center[1]+self.radius or \
-                        not self.center[0]-self.radius < a2 < self.center[0]+self.radius or \
-                        not self.center[1]-self.radius < b2 < self.center[1]+self.radius:
+                if not self.center[0] - self.radius < a1 < self.center[0] + self.radius or \
+                        not self.center[1] - self.radius < b1 < self.center[1] + self.radius or \
+                        not self.center[0] - self.radius < a2 < self.center[0] + self.radius or \
+                        not self.center[1] - self.radius < b2 < self.center[1] + self.radius:
                     continue
-                plt.arrow(a1, b1, a2-a1,
-                          b2-b1, width=0.004*self.radius, head_width=0.05*self.radius,
-                          head_length=0.01*self.radius, fc='k', ec='k')
+                plt.arrow(a1, b1, a2 - a1,
+                          b2 - b1, width=0.004 * self.radius, head_width=0.05 * self.radius,
+                          head_length=0.01 * self.radius, fc='k', ec='k')
         # self.canvas.draw()
         show()
 

@@ -1,5 +1,17 @@
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+
+import java.awt.geom.CubicCurve2D;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
+import java.nio.CharBuffer;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.function.Function;
 
 public class Demo {
     public static List<AbstractFunction> functions = List.of(
@@ -30,8 +42,20 @@ public class Demo {
         double eps = 0.001;
         double alpha = 1;
         boolean ng = false;
+        CustomFunction customFunction = null;
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
+                case "-c":
+                    String path = args[++i];
+                    try {
+                        final Gson gson = new Gson();
+                        Type typeToken = new TypeToken<CustomFunction>(){}.getType();
+                        JsonReader reader = new JsonReader(new FileReader(path));
+                        customFunction = gson.fromJson(reader, typeToken);
+                    } catch (IOException e) {
+                        System.out.println("cant read from file");
+                        return;
+                    }
                 case "-f":
                     fnInd = Integer.parseInt(args[++i]);
                     break;
@@ -53,12 +77,18 @@ public class Demo {
             }
         }
         Method method = null;
+        AbstractFunction fn;
+        if (customFunction == null) {
+            fn = functions.get(fnInd);
+        } else {
+            fn = customFunction;
+        }
         if (methodInd == 0) {
-            method = new GradientDescent(functions.get(fnInd), eps, alpha, ng);
+            method = new GradientDescent(fn, eps, alpha, ng);
         } else if (methodInd == 1) {
-            method = new SteepestDescent(functions.get(fnInd), eps);
+            method = new SteepestDescent(fn, eps);
         } else if (methodInd == 2) {
-            method = new ConjugateGradient(functions.get(fnInd), eps);
+            method = new ConjugateGradient(fn, eps);
         }
         if (method != null) {
             System.out.println(method.process());

@@ -5,15 +5,11 @@ functions = [
     "x^2+1000y^2+z^2"
 ]
 
+matrix_file_name = 'function.json'
+
 methods = ["Градиентного спуска",
            "Наискорейшего спуска",
            "Сопряженных градиентов"]
-
-colors = ["b",
-          "g",
-          "y",
-          "r",
-          "orange"]
 
 actions = ["Execute method",
            "Measure the iterations"]
