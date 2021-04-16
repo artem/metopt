@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import numpy as np
 from pylab import cm, imshow, contour, clabel, colorbar, title, show
+from function import Function
 
 # from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -81,7 +82,7 @@ class GUI:
         tk.Label(self.window, text='Фун.').grid(column=2, row=0, pady=3)
         self.selected_function = tk.StringVar()
         func_selector = ttk.Combobox(self.window, textvariable=self.selected_function,
-                                     values=[x.description for x in values.functions], state='readonly')
+                                     values=values.functions, state='readonly')
         func_selector.grid(column=3, row=0, pady=3)
         func_selector.current(0)
 
@@ -107,7 +108,8 @@ class GUI:
         self.text_editor = tk.Text()
         self.text_editor.grid(column=0, row=4, columnspan=4)
 
-        tk.Button(self.window, text='Stepping', command=self.steps_activate, height=2, width=15).grid(column=0, row=5, pady=5)
+        tk.Button(self.window, text='Stepping', command=self.steps_activate, height=2, width=15)\
+            .grid(column=0, row=5, pady=5)
         tk.Button(self.window, text='Prev', command=self.steps_prev, height=2, width=15).grid(column=1, row=5, pady=5)
         tk.Button(self.window, text='Next', command=self.steps_next, height=2, width=15).grid(column=2, row=5, pady=5)
         tk.Button(self.window, text='All', command=self.steps_deactivate, height=2, width=15)\
@@ -180,12 +182,12 @@ class GUI:
         if action == 0:
             self.method = values.methods.index(self.selected_method.get())
             for i, f in enumerate(values.functions):
-                if f.description == self.selected_function.get():
+                if f == self.selected_function.get():
                     self.functionId = i
                     break
             self.function, self.steps = query.call(self.method, self.functionId, eps=self.settings['eps'],
                                                    alpha=self.settings['alpha'], ng=self.settings['ng'])
-            self.function.description = values.functions[self.functionId].description
+            self.function.description = values.functions[self.functionId]
             self.center = (self.steps[-1][0][0], self.steps[-1][1][0])
             self.min_x_label['text'] = self.steps[-1].T
             self.min_y_label['text'] = self.function.eval(self.steps[-1])

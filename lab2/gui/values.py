@@ -1,25 +1,8 @@
-import numpy as np
-
-
-class Function:
-    def __init__(self, a, b, c, d=""):
-        self.description = d
-        self.a = np.array(a)
-        self.b = np.array(b)
-        self.c: float = c
-
-    def eval(self, x: np.ndarray):
-        return self.a.dot(x).T.dot(x)/2 + self.b.T.dot(x) + self.c
-
-
-a1 = np.array([[128, 126], [126, 128]], dtype=float)
-a2 = np.array([[512, 506], [506, 512]], dtype=float)
-b1 = np.array([-10, 30], dtype=float)
-b2 = np.array([50, 130], dtype=float)
-
 functions = [
-    Function(a1, b1, 13, "64x^2+126xy+64y^2-10x+30y+13"),
-    Function(a2, b2, 111, "254x^2+506xy+254y^2+50x+130y-111")
+    "64x^2+126xy+64y^2-10x+30y+13",
+    "254x^2+506xy+254y^2+50x+130y-111",
+    "10x^2+2y^2",
+    "x^2+1000y^2+z^2"
 ]
 
 methods = ["Градиентного спуска",
