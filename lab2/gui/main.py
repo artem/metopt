@@ -157,26 +157,25 @@ class GUI:
             plt.axis('off')
         else:
             colorbar(fg)
-        if self.var_arrows:
-            print()
-            print()
-            print()
+        if self.var_arrows.get():
             for i in range(len(self.data)-1):
                 a1, b1 = np.array(self.data[i]['data']).T[0]
-                print('-')
-                print(self.center[0]-self.radius, a1, self.center[0]+self.radius)
-                print(self.center[1]-self.radius, b1, self.center[1]+self.radius)
+                a2, b2 = np.array(self.data[i + 1]['data']).T[0]
                 if not self.center[0]-self.radius < a1 < self.center[0]+self.radius:
                     print("continued")
                     continue
                 if not self.center[1]-self.radius < b1 < self.center[1]+self.radius:
                     print("continued")
                     continue
-                a2, b2 = np.array(self.data[i+1]['data']).T[0]
-                # plt.arrow(a1, b1, a2-a1, b2-b1)
+                if not self.center[0]-self.radius < a2 < self.center[0]+self.radius:
+                    print("continued")
+                    continue
+                if not self.center[1]-self.radius < b2 < self.center[1]+self.radius:
+                    print("continued")
+                    continue
                 plt.arrow(a1, b1, a2-a1-0.01*self.radius, b2-b1-0.01*self.radius, width=0.004*self.radius, head_width=0.05*self.radius,
                           head_length=0.01*self.radius, fc='k', ec='k')
-        self.canvas.draw()
+        # self.canvas.draw()
         # show()
 
     def func(self):
