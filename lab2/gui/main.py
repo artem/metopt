@@ -131,7 +131,7 @@ class GUI:
             self.function, self.data = query.call(self.method, self.functionId, eps=self.settings['eps'],
                                                   alpha=self.settings['alpha'], ng=self.settings['ng'])
             self.function.description = values.functions[self.functionId].description
-            self.center = (self.data[-1]["data"][1][0], self.data[-1]["data"][0][0])
+            self.center = (self.data[-1]["data"][0][0], self.data[-1]["data"][1][0])
             self.paint_main_function()
 
     def paint_main_function(self):
@@ -140,12 +140,12 @@ class GUI:
         plt.cla()
         plt.clf()
 
-        zoom = (int(self.zoom_entry.get()) ** 2)
+        zoom = (int(self.zoom_entry.get()) ** 3)
         self.radius = self.size/zoom
         x = np.arange(self.center[0] - self.radius, self.center[0] + self.radius, self.radius / 50)
         y = np.arange(self.center[1] - self.radius, self.center[1] + self.radius, self.radius / 50)
-        Z = np.array([[self.function.eval(np.array([i, j]).T)[0] for j in x] for i in y])
-        self.fig = imshow(Z, cmap=cm.RdBu, extent=(x[0], x[-1], y[-1], y[0]))
+        Z = np.array([[self.function.eval(np.array([j, i]).T)[0] for j in x] for i in y])
+        fg = imshow(Z, cmap=cm.RdBu, extent=(x[0], x[-1], y[-1], y[0]))
         mini = Z.min()
         maxi = Z.max()
         if self.var_lines.get():
@@ -156,9 +156,28 @@ class GUI:
         if not self.var_axis.get():
             plt.axis('off')
         else:
-            colorbar(self.fig)
+            colorbar(fg)
+        if self.var_arrows:
+            print()
+            print()
+            print()
+            for i in range(len(self.data)-1):
+                a1, b1 = np.array(self.data[i]['data']).T[0]
+                print('-')
+                print(self.center[0]-self.radius, a1, self.center[0]+self.radius)
+                print(self.center[1]-self.radius, b1, self.center[1]+self.radius)
+                if not self.center[0]-self.radius < a1 < self.center[0]+self.radius:
+                    print("continued")
+                    continue
+                if not self.center[1]-self.radius < b1 < self.center[1]+self.radius:
+                    print("continued")
+                    continue
+                a2, b2 = np.array(self.data[i+1]['data']).T[0]
+                # plt.arrow(a1, b1, a2-a1, b2-b1)
+                plt.arrow(a1, b1, a2-a1-0.01*self.radius, b2-b1-0.01*self.radius, width=0.004*self.radius, head_width=0.05*self.radius,
+                          head_length=0.01*self.radius, fc='k', ec='k')
         self.canvas.draw()
-
+        # show()
 
     def func(self):
         def save():
