@@ -246,8 +246,8 @@ class GUI:
                         not self.center[1] - self.radius < b2 < self.center[1] + self.radius:
                     continue
                 plt.arrow(a1, b1, a2 - a1,
-                          b2 - b1, width=0.004 * self.radius, head_width=0.05 * self.radius,
-                          head_length=0.01 * self.radius, fc='k', ec='k')
+                          b2 - b1, width=0.002 * self.radius, head_width=0.01 * self.radius,
+                          head_length=0.005 * self.radius, fc='yellow', ec='yellow')
         # self.canvas.draw()
         show()
 
