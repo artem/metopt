@@ -149,28 +149,22 @@ public class Matrix {
         if (n != other.n || m != other.m) {
             throw new IllegalArgumentException("Incompatible matrices.");
         }
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < m; ++j) {
-                set(i, j, get(i, j) + other.get(i, j));
-            }
-        }
+        IntStream.range(0, n).forEach(i -> IntStream.range(0, m).forEach(j -> set(i, j, get(i, j) + other.get(i, j))));
+        return this;
+    }
+
+    public Matrix mulBy(double k) {
+        data.forEach(row -> IntStream.range(0, m).forEach(i -> row.set(i, row.get(i) * k)));
         return this;
     }
 
     public void divBy(double k) {
-        if (k == 0.) {
-            throw new IllegalArgumentException("Division by zero.");
-        }
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < m; ++j) {
-                set(i, j, get(i, j) / k);
-            }
-        }
+        data.forEach(row -> IntStream.range(0, m).forEach(i -> row.set(i, row.get(i) / k)));
     }
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder(String.format("OldMatrix %dx%d\n", n, m));
+        StringBuilder result = new StringBuilder(String.format("Matrix %dx%d\n", n, m));
         for (int i = 0; i < n; ++i) {
             result.append(data.get(i).stream().map(String::valueOf).collect(Collectors.joining(" "))).append("\n");
         }

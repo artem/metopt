@@ -19,7 +19,7 @@ public abstract class AbstractFunction {
     }
 
     Matrix gradient(final Matrix x) {
-        return A.mul(x).add(b);
+        return A.mul(x).addBy(b);
     }
 
     private String shortDouble(double d) {

@@ -1,7 +1,7 @@
 import java.util.function.UnaryOperator;
 
 public class SteepestDescent implements Method {
-    static final int MAX_ITERATIONS = 25_000;
+    static final int MAX_ITERATIONS = 50_000;
 
     private final AbstractFunction f;
     private final double eps;
@@ -24,14 +24,11 @@ public class SteepestDescent implements Method {
         Matrix p = f.gradient(x).negate();
         result.add(new Matrix(x));
 
-        for (int i = 0; i < MAX_ITERATIONS; ++i) {
-            if (p.len() < eps) {
-                return result;
-            }
+        for (int i = 0; i < MAX_ITERATIONS && p.len() > eps; ++i) {
             Matrix finalP = p;
             UnaryOperator<Double> g = z -> f.eval(x.add(finalP.mul(z)));
             double a = SingleDimensionMethods.goldenRatio(g, eps, 0, aMax);
-            x.addBy(p.mul(a));
+            x.addBy(p.mulBy(a)); // we don't need p anymore, so we can mulBy it
             p = f.gradient(x).negate();
             result.add(new Matrix(x));
         }

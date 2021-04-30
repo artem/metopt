@@ -5,6 +5,10 @@ public class DiagonalMatrix extends Matrix {
         super(List.of(diag));
     }
 
+    public double minElement() {
+        return data.get(0).stream().min(Double::compareTo).orElseThrow();
+    }
+
     public Matrix mul(Matrix other) {
         if (m != other.n) {
             throw new IllegalArgumentException("Incompatible matrices.");

@@ -2,16 +2,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
-import java.awt.geom.CubicCurve2D;
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
-import java.nio.CharBuffer;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.function.Function;
 
 public class Demo {
     public static List<AbstractFunction> functions = List.of(
@@ -84,7 +78,7 @@ public class Demo {
             fn = customFunction;
         }
         if (methodInd == 0) {
-            method = new GradientDescent(fn, eps, alpha, ng);
+            method = new GradientDescent(fn, eps, alpha);
         } else if (methodInd == 1) {
             method = new SteepestDescent(fn, eps);
         } else if (methodInd == 2) {

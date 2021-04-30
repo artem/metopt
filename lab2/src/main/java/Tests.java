@@ -31,9 +31,9 @@ public class Tests {
         for (int i = 0; i < functions.size(); ++i) {
             AbstractFunction f = functions.get(i);
             sb.append(String.format("         $F_%d$ & ", i + 1));
-            addEntry(sb, new GradientDescent(f, eps, 1, false).process(), f);
+            addEntry(sb, new GradientDescent(f, eps, 1).process(), f);
             sb.append(" & ");
-            addEntry(sb, new GradientDescent(f, eps, 1, true).process(), f);
+            addEntry(sb, new GradientDescent(f, eps, 1).process(), f);
             sb.append(" & ");
             addEntry(sb, new SteepestDescent(f, eps).process(), f);
             sb.append(" & ");
@@ -46,8 +46,7 @@ public class Tests {
     private static Random rand;
 
     private static int random(int l, int r) {
-        r++;
-        return l + rand.nextInt(r - l);
+        return l + rand.nextInt(r + 1 - l);
     }
 
     private static List<Double> randomList(int dim, int l, int r) {
@@ -77,7 +76,9 @@ public class Tests {
             double C = random(-c, c);
             Vector x0 = new Vector(randomList(dimension, -c, c));
             AbstractFunction f = new CustomFunction(A, B, C, x0);
+//            System.out.println("        " + c + " & " + new GradientDescent(f, 1e-5, A.minElement(), c).process().getSteps().size() + " \\\\ \\hline");
             System.out.println("        " + c + " & " + new SteepestDescent(f, 1e-5, c).process().getSteps().size() + " \\\\ \\hline");
+//            System.out.println("        " + c + " & " + new ConjugateGradient(f, 1e-5).process().getSteps().size() + " \\\\ \\hline");
         }
         System.out.println("    \\end{tabular}");
         System.out.println("\\end{center}");
@@ -96,8 +97,9 @@ public class Tests {
 
         rand = new Random(System.currentTimeMillis());
 
-        testSubmethods(eps, functions, Ls);
-        testDifference(eps, functions, Ls);
+//        testSubmethods(eps, functions, Ls);
+//        testDifference(eps, functions, Ls);
         testDimensionAndConditioning();
+
     }
 }
