@@ -1,18 +1,20 @@
 public class ConjugateGradient implements Method {
     private final AbstractFunction f;
+    private final double eps;
 
     public ConjugateGradient(AbstractFunction f) {
-        this.f = f;
+        this(f, 1e-5);
     }
 
     public ConjugateGradient(AbstractFunction f, double eps) {
-        this(f);
+        this.f = f;
+        this.eps = eps;
     }
 
     public Trace process() throws MatrixException {
         final Trace result = new Trace(f);
 
-        Matrix x = f.x0;
+        Matrix x = new Matrix(f.x0);
         Matrix grad = f.gradient(x);
         Matrix p = grad.negated();
         double gradLen = grad.len();
@@ -20,7 +22,7 @@ public class ConjugateGradient implements Method {
 
         result.add(new Matrix(x));
 
-        for (int i = 0; i < x.getN(); ++i) {
+        while (p.len() > eps) {
             final Matrix Ap = f.A.mul(p);
             final double a = gradLen * gradLen / Ap.scalar(p);
             x.addBy(p.mul(a));

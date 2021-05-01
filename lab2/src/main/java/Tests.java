@@ -4,7 +4,12 @@ import java.util.List;
 import java.util.Random;
 
 public class Tests {
-    public static void testSubmethods(double eps, List<AbstractFunction> functions, List<Double> Ls) {
+    private static double eps;
+    private static List<AbstractFunction> functions;
+    private static List<Double> l;
+    private static List<Double> L;
+
+    public static void testSubmethods() {
         System.out.println("Test single dimension methods");
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < functions.size(); ++i) {
@@ -13,7 +18,7 @@ public class Tests {
         System.out.println(sb.toString());
         sb = new StringBuilder();
         for (int i = 0; i < functions.size(); ++i) {
-            sb.append(" & ").append(new SteepestDescent(functions.get(i), eps, Ls.get(i)).process().getSteps().size());
+            sb.append(" & ").append(new SteepestDescent(functions.get(i), eps, L.get(i)).process().getSteps().size());
         }
         System.out.println(sb.toString());
         System.out.println();
@@ -25,17 +30,15 @@ public class Tests {
         sb.append(String.format("%.5f & %d", f.eval(x), steps));
     }
 
-    public static void testDifference(double eps, List<AbstractFunction> functions, List<Double> Ls) {
+    public static void testDifference() {
         System.out.println("Test different methods and functions");
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < functions.size(); ++i) {
             AbstractFunction f = functions.get(i);
             sb.append(String.format("         $F_%d$ & ", i + 1));
-            addEntry(sb, new GradientDescent(f, eps, 1).process(), f);
+            addEntry(sb, new GradientDescent(f, eps, l.get(i), L.get(i)).process(), f);
             sb.append(" & ");
-            addEntry(sb, new GradientDescent(f, eps, 1).process(), f);
-            sb.append(" & ");
-            addEntry(sb, new SteepestDescent(f, eps).process(), f);
+            addEntry(sb, new SteepestDescent(f, eps, L.get(i)).process(), f);
             sb.append(" & ");
             addEntry(sb, new ConjugateGradient(f, eps).process(), f);
             sb.append(" \\\\ \\hline\n");
@@ -76,9 +79,9 @@ public class Tests {
             double C = random(-c, c);
             Vector x0 = new Vector(randomList(dimension, -c, c));
             AbstractFunction f = new CustomFunction(A, B, C, x0);
-//            System.out.println("        " + c + " & " + new GradientDescent(f, 1e-5, A.minElement(), c).process().getSteps().size() + " \\\\ \\hline");
-            System.out.println("        " + c + " & " + new SteepestDescent(f, 1e-5, c).process().getSteps().size() + " \\\\ \\hline");
-//            System.out.println("        " + c + " & " + new ConjugateGradient(f, 1e-5).process().getSteps().size() + " \\\\ \\hline");
+            System.out.println("        " + c + " & " + new GradientDescent(f, eps, A.minElement(), c).process().getSteps().size() + " \\\\ \\hline");
+            System.out.println("        " + c + " & " + new SteepestDescent(f, eps, c).process().getSteps().size() + " \\\\ \\hline");
+            System.out.println("        " + c + " & " + new ConjugateGradient(f, eps).process().getSteps().size() + " \\\\ \\hline");
         }
         System.out.println("    \\end{tabular}");
         System.out.println("\\end{center}");
@@ -90,16 +93,16 @@ public class Tests {
         }
     }
 
-    public static void main(String[] args) {
-        double eps = 1e-4;
-        List<AbstractFunction> functions = List.of(new Function1(), new Function2(), new Function3(), new Function4());
-        List<Double> Ls = List.of(254., 1014., 40., 8000.);
-
+    private static void init() {
         rand = new Random(System.currentTimeMillis());
+        eps = 1e-5;
+        functions = List.of(new Function1(), new Function2(), new Function3(), new Function4());
+        l = List.of(1.0, 2.0, 13.4559962547, 2.0);
+        L = List.of(10.0, 1014.0, 30.5440037453, 8000.0);
+    }
 
-//        testSubmethods(eps, functions, Ls);
-//        testDifference(eps, functions, Ls);
-        testDimensionAndConditioning();
-
+    public static void main(String[] args) {
+        init();
+        testDifference();
     }
 }

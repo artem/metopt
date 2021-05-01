@@ -1,7 +1,7 @@
 import java.util.function.UnaryOperator;
 
 public class SteepestDescent implements Method {
-    static final int MAX_ITERATIONS = 50_000;
+    static final int MAX_ITERATIONS = 100_000;
 
     private final AbstractFunction f;
     private final double eps;
@@ -20,7 +20,7 @@ public class SteepestDescent implements Method {
     public Trace process() throws MatrixException {
         final Trace result = new Trace(f);
 
-        Matrix x = f.x0;
+        Matrix x = new Matrix(f.x0);
         Matrix p = f.gradient(x).negate();
         result.add(new Matrix(x));
 

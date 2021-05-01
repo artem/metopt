@@ -17,7 +17,7 @@ public class GradientDescent implements Method{
     public Trace process() throws MatrixException {
         final Trace result = new Trace(fn);
 
-        Matrix x = fn.x0;
+        Matrix x = new Matrix(fn.x0);
         Matrix gradient = fn.gradient(x);
         double fx = fn.eval(x);
 
