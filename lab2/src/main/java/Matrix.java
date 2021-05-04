@@ -132,8 +132,9 @@ public class Matrix {
         return Math.sqrt(scalar(this));
     }
 
-    public void normalize() {
+    public Matrix normalize() {
         divBy(len());
+        return this;
     }
 
     public Matrix negate() {
@@ -158,8 +159,9 @@ public class Matrix {
         return this;
     }
 
-    public void divBy(double k) {
+    public Matrix divBy(double k) {
         data.forEach(row -> IntStream.range(0, m).forEach(i -> row.set(i, row.get(i) / k)));
+        return this;
     }
 
     @Override

@@ -77,12 +77,16 @@ public class Demo {
         } else {
             fn = customFunction;
         }
-        if (methodInd == 0) {
-            method = new GradientDescent(fn, eps, alpha);
-        } else if (methodInd == 1) {
-            method = new SteepestDescent(fn, eps);
-        } else if (methodInd == 2) {
-            method = new ConjugateGradient(fn, eps);
+        switch (methodInd) {
+            case 0:
+                method = new GradientDescent(fn, eps, alpha, ng);
+                break;
+            case 1:
+                method = new SteepestDescent(fn, eps);
+                break;
+            case 3:
+                method = new ConjugateGradient(fn, eps);
+                break;
         }
         if (method != null) {
             System.out.println(method.process());
