@@ -3,10 +3,6 @@ import tkinter as tk
 from tkinter import ttk
 import numpy as np
 from pylab import cm, imshow, contour, clabel, colorbar, title, show
-import json
-from function import Function
-
-# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 import values
 import query
@@ -18,7 +14,6 @@ class SteppingController:
     def __init__(self, steps: np.ndarray):
         self.is_active = False
         self.steps = steps.reshape((steps.shape[0], 2))
-        # self.steps = np.array([(x[0][0], x[1][0]) for x in steps])
         self.steps_number = self.steps.shape[0]
         self.current = 0
 
@@ -88,7 +83,7 @@ class GUI:
         func_selector.grid(column=3, row=0, pady=3)
         func_selector.current(0)
 
-        tk.Button(self.window, text='Parameters', command=self.func, height=2, width=15, background='black',
+        tk.Button(self.window, text='Parameters', command=self.params_window, height=2, width=15, background='black',
                   foreground='white').grid(column=0, row=1, pady=5)
         tk.Button(self.window, text='Launch', command=self.launch, height=2, width=15, background='green',
                   foreground='white').grid(column=1, row=1, pady=5)
@@ -105,8 +100,6 @@ class GUI:
         self.zoom_entry = tk.Scale(self.window, from_=1, to=200, len=400, orient=tk.HORIZONTAL, resolution=1)
         self.zoom_entry.grid(column=1, row=2, columnspan=3, pady=3)
 
-        # self.fig = plt.figure(1)
-        # self.canvas = FigureCanvasTkAgg(self.fig, master=self.window)
         self.text_editor = tk.Text()
         self.text_editor.grid(column=0, row=4, columnspan=4)
         scroll = tk.Scrollbar(command=self.text_editor.yview)
@@ -193,11 +186,11 @@ class GUI:
             self.function, self.steps = query.call(self.method, self.functionId, eps=self.settings['eps'],
                                                    alpha=self.settings['alpha'], ng=self.settings['ng'])
         elif action == 1:
-            text: str = self.text_editor.get("1.0", 'end-1c')
-            self.function, self.steps = query.call_custom(self.method, text, eps=self.settings['eps'],
+            func: str = self.text_editor.get("1.0", 'end-1c')
+            self.function, self.steps = query.call_custom(self.method, func, eps=self.settings['eps'],
                                                           alpha=self.settings['alpha'], ng=self.settings['ng'])
         self.text_editor.delete('1.0', 'end')
-        self.text_editor.insert(tk.END, str(self.function))
+        self.text_editor.insert(tk.END, query.load.json_func)
         self.text_editor.insert(tk.END, '\n[\n')
         for i in self.steps:
             self.text_editor.insert(tk.END, str(i) + '\n')
@@ -248,10 +241,9 @@ class GUI:
                 plt.arrow(a1, b1, a2 - a1,
                           b2 - b1, width=0.002 * self.radius, head_width=0.02 * self.radius,
                           head_length=0.008 * self.radius, fc='yellow', ec='yellow')
-        # self.canvas.draw()
         show()
 
-    def func(self):
+    def params_window(self):
         def save():
             self.settings['eps'] = eps.get()
             self.settings['start'] = start.get().split()

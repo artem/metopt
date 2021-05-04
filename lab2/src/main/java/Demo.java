@@ -21,6 +21,7 @@ public class Demo {
         System.out.println("    0 - GradientDescent");
         System.out.println("    1 - SteepestDescent");
         System.out.println("    2 - ConjugateGradient");
+        System.out.println("-c - use custom function");
         System.out.println("-e - eps");
         System.out.println("-a - alpha");
         System.out.println("-ng - normalized gradient in GradientDescent");
@@ -50,6 +51,7 @@ public class Demo {
                         System.out.println("cant read from file");
                         return;
                     }
+                    break;
                 case "-f":
                     fnInd = Integer.parseInt(args[++i]);
                     break;
@@ -67,6 +69,7 @@ public class Demo {
                     break;
                 default:
                     printHelp();
+                    System.out.println("got " + args[i]);
                     return;
             }
         }

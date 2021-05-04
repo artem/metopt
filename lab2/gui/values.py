@@ -12,6 +12,9 @@ methods = ["Градиентного спуска",
            "Сопряженных градиентов"]
 
 actions = ["Execute method",
-           "Measure the iterations"]
+           "Use custom function"]
 
 jar_path = "../build/distributions/lib/lab2-0.1-all.jar"
+
+java_path = ''
+# java_path = 'C:\\Program Files\\Java\\jdk-14.0.2\\bin\\'
