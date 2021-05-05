@@ -87,7 +87,7 @@ public class Demo {
             case 1:
                 method = new SteepestDescent(fn, eps);
                 break;
-            case 3:
+            case 2:
                 method = new ConjugateGradient(fn, eps);
                 break;
         }
