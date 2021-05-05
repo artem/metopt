@@ -5,16 +5,25 @@ public class SteepestDescent implements Method {
 
     private final AbstractFunction f;
     private final double eps;
-    private final double aMax;
 
     public SteepestDescent(final AbstractFunction f, final double eps) {
-        this(f, eps, 1e-9);
-    }
-
-    public SteepestDescent(final AbstractFunction f, final double eps, final double L) {
         this.f = f;
         this.eps = eps;
-        this.aMax = 2 / L;
+    }
+    private double findMin(UnaryOperator<Double> g) {
+        double t = 1.0;
+        double pt = 0.0;
+        double ppt = pt;
+        double gt = g.apply(t);
+        double pgt = g.apply(pt);
+        while (gt <= pgt) {
+            ppt = pt;
+            pt = t;
+            t *= 2;
+            pgt = gt;
+            gt = g.apply(t);
+        }
+        return SingleDimensionMethods.fib(g, eps, ppt, t);
     }
 
     public Trace process() throws MatrixException {
@@ -26,11 +35,14 @@ public class SteepestDescent implements Method {
 
         for (int i = 0; i < MAX_ITERATIONS && p.len() > eps; ++i) {
             Matrix finalP = p;
-            UnaryOperator<Double> g = z -> f.eval(x.add(finalP.mul(z)));
-            double a = SingleDimensionMethods.goldenRatio(g, eps, 0, aMax);
+            double a = findMin(z -> f.eval(x.add(finalP.mul(z))));
+            if (Double.isNaN(a) || Double.isInfinite(a)) {
+                System.out.println("NaN or Inf =)");
+            }
             x.addBy(p.mulBy(a)); // we don't need p anymore, so we can mulBy it
             p = f.gradient(x).negate();
-            result.add(new Matrix(x));
+//            result.add(new Matrix(x));
+            result.add(null);
         }
 
         return result;

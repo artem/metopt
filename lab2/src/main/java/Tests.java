@@ -9,18 +9,19 @@ public class Tests {
     private static List<Double> l;
     private static List<Double> L;
 
+    @SuppressWarnings("unused")
     public static void testSubmethods() {
         System.out.println("Test single dimension methods");
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < functions.size(); ++i) {
             sb.append("        $F_").append(i + 1).append(" = $ & $").append(functions.get(i)).append("$ \\\\ \n");
         }
-        System.out.println(sb.toString());
+        System.out.println(sb);
         sb = new StringBuilder();
-        for (int i = 0; i < functions.size(); ++i) {
-            sb.append(" & ").append(new SteepestDescent(functions.get(i), eps, L.get(i)).process().getSteps().size());
+        for (AbstractFunction function : functions) {
+            sb.append(" & ").append(new SteepestDescent(function, eps).process().getSteps().size());
         }
-        System.out.println(sb.toString());
+        System.out.println(sb);
         System.out.println();
     }
 
@@ -38,12 +39,12 @@ public class Tests {
             sb.append(String.format("         $F_%d$ & ", i + 1));
             addEntry(sb, new GradientDescent(f, eps, l.get(i), L.get(i)).process(), f);
             sb.append(" & ");
-            addEntry(sb, new SteepestDescent(f, eps, L.get(i)).process(), f);
+            addEntry(sb, new SteepestDescent(f, eps).process(), f);
             sb.append(" & ");
             addEntry(sb, new ConjugateGradient(f, eps).process(), f);
             sb.append(" \\\\ \\hline\n");
         }
-        System.out.println(sb.toString());
+        System.out.println(sb);
     }
 
     private static Random rand;
@@ -68,25 +69,20 @@ public class Tests {
     }
 
     private static void testConditioning(int dimension) {
-        System.out.println("\\subsection*{Размерность " + dimension + "}");
-        System.out.println("\\begin{center}");
-        System.out.println("    \\begin{tabular}{|c|c|}");
-        System.out.println("    \\hline");
-        System.out.println("        Обусловленность & Число итераций \\\\ \\hline");
+        System.out.println("Размерность " + dimension);
         for (int c = 1; c <= 2_001; c += 200) {
             DiagonalMatrix A = randomDiag(dimension, c);
             Vector B = new Vector(randomList(dimension, -c, c));
             double C = random(-c, c);
             Vector x0 = new Vector(randomList(dimension, -c, c));
             AbstractFunction f = new CustomFunction(A, B, C, x0);
-            System.out.println("        " + c + " & " + new GradientDescent(f, eps, A.minElement(), c).process().getSteps().size() + " \\\\ \\hline");
-            System.out.println("        " + c + " & " + new SteepestDescent(f, eps, c).process().getSteps().size() + " \\\\ \\hline");
-            System.out.println("        " + c + " & " + new ConjugateGradient(f, eps).process().getSteps().size() + " \\\\ \\hline");
+//            System.out.println(c + " " + new GradientDescent(f, eps, A.minElement(), c).process().getSteps().size());
+            System.out.println(c + " " + new SteepestDescent(f, eps).process().getSteps().size());
+//            System.out.println(c + " " + new ConjugateGradient(f, eps).process().getSteps().size());
         }
-        System.out.println("    \\end{tabular}");
-        System.out.println("\\end{center}");
     }
 
+    @SuppressWarnings("unused")
     private static void testDimensionAndConditioning() {
         for (int dimension = 10; dimension <= 10_000; dimension *= 10) {
             testConditioning(dimension);
@@ -103,6 +99,6 @@ public class Tests {
 
     public static void main(String[] args) {
         init();
-        testDifference();
+        testDimensionAndConditioning();
     }
 }
