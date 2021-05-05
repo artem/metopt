@@ -199,7 +199,7 @@ class GUI:
         self.center = (self.steps[-1][0][0], self.steps[-1][1][0])
         self.min_x_label['text'] = self.steps[-1].T
         self.min_y_label['text'] = self.function.eval(self.steps[-1])
-        self.steps_label['text'] = self.steps.shape[0]
+        self.steps_label['text'] = self.steps.shape[0] - 1
         self.steps_controller = SteppingController(self.steps)
         self.center, self.size = self.steps_controller.get_radius()
         self.paint_main_function()
@@ -221,7 +221,7 @@ class GUI:
             cset = contour(z, np.arange(mini, maxi, (maxi - mini) / 10), linewidths=2, cmap=cm.Set2,
                            extent=(x[0], x[-1], y[0], y[-1]))
             clabel(cset, inline=True, fmt='%1.1f', fontsize=10)
-        if self.var_text.get():
+        if self.var_text.get() and values.actions.index(self.current_action.get()) == 0:
             title(self.function.description)
         if not self.var_axis.get():
             plt.axis('off')
