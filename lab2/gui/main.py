@@ -59,9 +59,8 @@ class GUI:
 
         self.settings = {
             'eps': '1e-3',
-            'start': '0 0',
             'alpha': '1',
-            'ng': '0'
+            'ng': 'False'
         }
 
         matplotlib.use('TkAgg')
@@ -246,7 +245,6 @@ class GUI:
     def params_window(self):
         def save():
             self.settings['eps'] = eps.get()
-            self.settings['start'] = start.get().split()
             self.settings['alpha'] = alpha.get()
             self.settings['ng'] = norm.get()
             top.destroy()
@@ -256,10 +254,6 @@ class GUI:
         eps = tk.Entry(top)
         eps.insert(tk.END, self.settings['eps'])
         eps.pack(anchor=tk.W)
-        tk.Label(top, text='Start').pack(anchor=tk.W)
-        start = tk.Entry(top)
-        start.insert(tk.END, self.settings['start'])
-        start.pack(anchor=tk.W)
         tk.Label(top, text='Alpha').pack(anchor=tk.W)
         alpha = tk.Entry(top)
         alpha.insert(tk.END, self.settings['alpha'])
