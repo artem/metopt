@@ -66,7 +66,6 @@ class GUI:
         matplotlib.use('TkAgg')
         self.window = tk.Tk()
         self.window.title('Metopt laba 2')
-        # window.geometry('640x640')
 
         tk.Label(self.window, text='Метод').grid(column=0, row=0, pady=3)
         self.selected_method = tk.StringVar()
@@ -240,6 +239,13 @@ class GUI:
                 plt.arrow(a1, b1, a2 - a1,
                           b2 - b1, width=0.002 * self.radius, head_width=0.02 * self.radius,
                           head_length=0.008 * self.radius, fc='yellow', ec='yellow')
+        else:
+            for i in range(start_ind, end_ind):
+                a, b = self.steps[i].T[0]
+                if not self.center[0] - self.radius < a < self.center[0] + self.radius or \
+                        not self.center[1] - self.radius < b < self.center[1] + self.radius:
+                    continue
+                plt.plot(a, b, 'go', markersize=4)
         show()
 
     def params_window(self):

@@ -41,8 +41,7 @@ public class SteepestDescent implements Method {
             }
             x.addBy(p.mulBy(a)); // we don't need p anymore, so we can mulBy it
             p = f.gradient(x).negate();
-//            result.add(new Matrix(x));
-            result.add(null);
+            result.add(new Matrix(x));
         }
 
         return result;
