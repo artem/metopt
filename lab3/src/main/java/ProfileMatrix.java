@@ -51,6 +51,14 @@ public class ProfileMatrix extends Matrix {
         getOrSet(i, j, value);
     }
 
+    @Override
+    Matrix transpose() {
+        double[] tmp = inCols;
+        inCols = inRows;
+        inRows = tmp;
+        return this;
+    }
+
     private int getLocalIndex(int i, int j, boolean check) {
         int start = profile[i];
         int end = profile[i+1];

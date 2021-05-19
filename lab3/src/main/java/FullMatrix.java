@@ -3,6 +3,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class FullMatrix extends Matrix {
     protected int n;
@@ -38,6 +39,11 @@ public class FullMatrix extends Matrix {
                 .collect(Collectors.toList()));
     }
 
+    public FullMatrix(Matrix other) {
+        this(other.getSize(), other.getSize());
+        IntStream.range(0, n).forEach(i -> IntStream.range(0, n).forEach(j -> set(i, j, other.get(i, j))));
+    }
+
     @Override
     public int getSize() {
         if (n != m)
@@ -53,14 +59,16 @@ public class FullMatrix extends Matrix {
         data.get(i).set(j, value);
     }
 
-    public FullMatrix T() {
-        FullMatrix result = new FullMatrix(m, n);
+    @Override
+    Matrix transpose() {
         for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < m; ++j) {
-                result.set(j, i, get(i, j));
+            for (int j = 0; j < i; ++j) {
+                double v = get(i, j);
+                set(i, j, get(j, i));
+                set(j, i, v);
             }
         }
-        return result;
+        return this;
     }
 
     public FullMatrix negated() {
@@ -68,19 +76,6 @@ public class FullMatrix extends Matrix {
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < m; ++j) {
                 result.set(i, j, -get(i, j));
-            }
-        }
-        return result;
-    }
-
-    public FullMatrix add(FullMatrix other) {
-        if (n != other.n || m != other.m) {
-            throw new IllegalArgumentException("Incompatible matrices.");
-        }
-        FullMatrix result = new FullMatrix(n, m);
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < m; ++j) {
-                result.set(i, j, get(i, j) + other.get(i, j));
             }
         }
         return result;
@@ -142,14 +137,6 @@ public class FullMatrix extends Matrix {
                 set(i, j, -get(i, j));
             }
         }
-        return this;
-    }
-
-    public FullMatrix addBy(FullMatrix other) {
-        if (n != other.n || m != other.m) {
-            throw new IllegalArgumentException("Incompatible matrices.");
-        }
-        IntStream.range(0, n).forEach(i -> IntStream.range(0, m).forEach(j -> set(i, j, get(i, j) + other.get(i, j))));
         return this;
     }
 
