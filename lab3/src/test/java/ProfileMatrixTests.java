@@ -6,7 +6,7 @@ import java.util.Random;
 
 import java.lang.Math;
 
-public class Tests {
+public class ProfileMatrixTests {
     Matrix full;
     Random generator;
 
