@@ -1,3 +1,5 @@
+import java.util.stream.IntStream;
+
 public class ProfileMatrix extends Matrix {
     double[] diag, inRows, inCols;
     int[] profile;
@@ -34,6 +36,18 @@ public class ProfileMatrix extends Matrix {
                 k++;
             }
         }
+    }
+
+    public static ProfileMatrix getFullSizeMatrix(int size) {
+        Matrix pattern = new FullMatrix(size, size);
+        for (int i = 0; i < size; i++)
+            for (int j = 0; j < size; j++)
+                pattern.set(i, j, 1);
+        ProfileMatrix result = new ProfileMatrix(pattern);
+        for (int i = 0; i < size; i++)
+            for (int j = 0; j < size; j++)
+                result.set(i, j, 1);
+        return result;
     }
 
     @Override
