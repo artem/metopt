@@ -4,11 +4,9 @@ import java.util.function.BinaryOperator;
 import java.util.stream.DoubleStream;
 
 public class Vector {
-    private final int n;
     private final double[] data;
 
     public Vector(final int n) {
-        this.n = n;
         data = new double[n];
     }
 
@@ -21,12 +19,11 @@ public class Vector {
     }
 
     public Vector(final double[] d) {
-        this.n = d.length;
-        data = Arrays.copyOf(d, n);
+        data = Arrays.copyOf(d, d.length);
     }
 
     public int size() {
-        return n;
+        return data.length;
     }
 
     public double get(final int index) {
@@ -38,13 +35,13 @@ public class Vector {
     }
 
     private Vector binOp(final BinaryOperator<Double> op, final Vector v) {
-        if (n != v.n) {
+        if (size() != v.size()) {
             throw new IllegalArgumentException("size does not match");
         }
 
-        Vector ret = new Vector(n);
+        Vector ret = new Vector(size());
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < size(); i++) {
             ret.set(i, op.apply(get(i), v.get(i)));
         }
         return ret;
@@ -64,9 +61,9 @@ public class Vector {
     }
 
     public Vector mul(final double k) {
-        Vector ret = new Vector(n);
+        Vector ret = new Vector(size());
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < size(); i++) {
             ret.set(i, get(i) * k);
         }
         return ret;
