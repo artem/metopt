@@ -26,19 +26,19 @@ public class LU {
                     Lij -= matrix.get(i, k) * matrix.get(k, j);
                 }
                 matrix.set(i, j, Lij);
-
-                double Uji = matrix.get(j, i);
+            }
+            for (int j = 0; j < i; j++) {
+                double Uji = A.get(j, i);
                 for (int k = 0; k < j; k++) {
                     Uji -= matrix.get(j, k) * matrix.get(k, i);
                 }
-                matrix.set(j, i, Uji/matrix.get(j, j));
-
-                double Lii = A.get(i, i);
-                for (int k = 0; k < i; k++) {
-                    Lii -= matrix.get(i, k) * matrix.get(k, i);
-                }
-                matrix.set(i, i, Lii);
+                matrix.set(j, i, Uji / matrix.get(j, j));
             }
+            double Lii = A.get(i, i);
+            for (int k = 0; k < i; k++) {
+                Lii -= matrix.get(i, k) * matrix.get(k, i);
+            }
+            matrix.set(i, i, Lii);
         }
     }
 }
