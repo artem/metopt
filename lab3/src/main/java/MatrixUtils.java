@@ -4,12 +4,13 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Random;
 
 // TODO
-// 1. Write different matrix generators
-// 2. Write test group generator
-// 3. ....
+// 1. Write different matrix generators -- DONE
+// 2. Write test group generator -- DONE
+// 3. Write group tester
+@SuppressWarnings("unused")
 public class MatrixUtils {
     private static final Path TESTSPATH =
             Path.of(getClassPath()).getParent().getParent().getParent().getParent().resolve("tests").toAbsolutePath();
@@ -22,7 +23,6 @@ public class MatrixUtils {
                 throw new RuntimeException("Unable to create tests directory", e);
             }
         }
-        System.out.println("Tests dir created");
     }
 
     private static String getClassPath() {
@@ -71,15 +71,80 @@ public class MatrixUtils {
         }
     }
 
+    /**
+     * Generates random profile matrix.
+     *
+     * @param n dimension of result matrix.
+     * @param k serial number of matrix.
+     * @return random profile matrix.
+     */
+    private static Matrix generateProfile(final int n, final int k) {
+        final Random random = new Random(System.currentTimeMillis());
+        final Matrix matrix = new FullMatrix(n, n);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                matrix.set(i, j, -random.nextInt(5));
+                matrix.set(j, i, -random.nextInt(5));
+            }
+        }
+        for (int i = 0; i < n; ++i) {
+            long aii = 0;
+            for (int j = 0; j < n; ++j) {
+                if (i == j) continue;
+                aii += matrix.get(i, j);
+            }
+            matrix.set(i, i, -aii);
+        }
+        final double a00 = matrix.get(0, 0);
+        matrix.set(0, 0, a00 + Math.pow(10, -k));
+        return new ProfileMatrix(matrix);
+    }
+
+    /**
+     * Generates random full matrix.
+     *
+     * @param n dimension of result matrix.
+     * @return random full matrix.
+     */
+    private static Matrix generateHilbert(final int n) {
+        final Matrix matrix = new FullMatrix(n, n);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                matrix.set(i, j, 1 / ((double) i + j + 1)); // the same as 1 / (i + j - 1), cause of 0-indexation
+            }
+        }
+        return matrix;
+    }
+
+    /**
+     * Generates group of tests.
+     *
+     * @param testGroup number of test's group.
+     * @param amount amount of tests for each dimension.
+     */
+    public static void generateTestGroup(final int testGroup, final int amount) {
+        switch (testGroup) {
+            case 1:
+                for (int dimension = 10; dimension <= 1000; dimension *= 10) {
+                    for (int test = 0; test < amount; ++test) {
+                        writeJson(generateProfile(dimension, test), getInputPathname(testGroup, dimension, test));
+                    }
+                }
+                break;
+            case 2:
+                for (int dimension = 10; dimension <= 1000; dimension *= 10) {
+                    for (int test = 0; test < amount; ++test) {
+                        writeJson(generateHilbert(dimension), getInputPathname(testGroup, dimension, test));
+                    }
+                }
+                break;
+            case 3:
+                throw new IllegalArgumentException("No generation for bonus group");
+            default:
+                throw new IllegalArgumentException("Unrecognized tests group");
+        }
+    }
+
     public static void main(String[] args) {
-        final Matrix fullMatrix = new FullMatrix(List.of(
-                new Vector(List.of(1.0, 0.0, 0.0)),
-                new Vector(List.of(0.0, 2.0, 3.0)),
-                new Vector(List.of(0.0, 4.0, 5.0))
-        ));
-        final Matrix profileMatrix = new ProfileMatrix(fullMatrix);
-        writeJson(profileMatrix, getInputPathname(1, 3, 0));
-//        final Matrix matrix = readJson(ProfileMatrix.class, getInputPathname(1, 3, 0));
-//        System.out.println(matrix);
     }
 }
