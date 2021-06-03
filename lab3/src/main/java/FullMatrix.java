@@ -89,6 +89,21 @@ public class FullMatrix extends Matrix {
         return ret;
     }
 
+    public Vector mul(final Vector v) {
+        if (v.size() != m) {
+            throw new MatrixException("Incompatible matrices");
+        }
+        final Vector result = new Vector(n);
+        for (int i = 0; i < n; ++i) {
+            double value = 0;
+            for (int j = 0; j < m; ++j) {
+                value += get(i, j) * v.get(j);
+            }
+            result.set(i, value);
+        }
+        return result;
+    }
+
     public FullMatrix mul(FullMatrix other) {
         if (m != other.n) {
             throw new IllegalArgumentException("Incompatible matrices.");
