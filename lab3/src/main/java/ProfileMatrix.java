@@ -1,12 +1,10 @@
-import java.util.stream.IntStream;
-
 public class ProfileMatrix extends Matrix {
     double[] diag, inRows, inCols;
     int[] profile;
     int n;
 
     ProfileMatrix(Matrix other) {
-        n = other.getSize();
+        n = other.size();
         diag = new double[n];
         profile = new int[n+1];
         profile[0] = profile[1] = 1;
@@ -51,7 +49,7 @@ public class ProfileMatrix extends Matrix {
     }
 
     @Override
-    public int getSize() {
+    public int size() {
         return n;
     }
 
@@ -61,12 +59,12 @@ public class ProfileMatrix extends Matrix {
     }
 
     @Override
-    void set(int i, int j, double value) {
+    public void set(int i, int j, double value) {
         getOrSet(i, j, value);
     }
 
     @Override
-    Matrix transpose() {
+    public Matrix transpose() { //todo
         double[] tmp = inCols;
         inCols = inRows;
         inRows = tmp;
