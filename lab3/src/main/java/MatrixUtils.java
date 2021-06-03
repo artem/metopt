@@ -73,9 +73,9 @@ public class MatrixUtils {
 
     public static void main(String[] args) {
         final Matrix fullMatrix = new FullMatrix(List.of(
-                List.of(1.0, 0.0, 0.0),
-                List.of(0.0, 2.0, 3.0),
-                List.of(0.0, 4.0, 5.0)
+                new Vector(List.of(1.0, 0.0, 0.0)),
+                new Vector(List.of(0.0, 2.0, 3.0)),
+                new Vector(List.of(0.0, 4.0, 5.0))
         ));
         final Matrix profileMatrix = new ProfileMatrix(fullMatrix);
         writeJson(profileMatrix, getInputPathname(1, 3, 0));

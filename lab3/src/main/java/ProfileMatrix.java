@@ -1,5 +1,3 @@
-import java.util.stream.IntStream;
-
 public class ProfileMatrix extends Matrix {
     double[] diag, inRows, inCols;
     int[] profile;

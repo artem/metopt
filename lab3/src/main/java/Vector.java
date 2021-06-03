@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.BinaryOperator;
 import java.util.stream.DoubleStream;
 
@@ -13,6 +14,10 @@ public class Vector {
 
     public Vector(final Vector v) {
         this(v.data);
+    }
+
+    public Vector(final List<Double> d) {
+        this(d.stream().mapToDouble(Double::doubleValue).toArray());
     }
 
     public Vector(final double[] d) {
