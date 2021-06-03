@@ -106,36 +106,9 @@ public class FullMatrix extends Matrix {
         return result;
     }
 
-    public double scalar(FullMatrix other) {
-        if (m != 1 || other.m != 1) {
-            throw new IllegalArgumentException("Scalar multiplication of non-vectors.");
-        }
-        if (n != other.n) {
-            throw new IllegalArgumentException("Incompatible matrices.");
-        }
-        double result = 0.;
-        for (int i = 0; i < n; ++i) {
-            result += get(i, 0) * other.get(i, 0);
-        }
-        return result;
-    }
-
-    public double len() {
-        return Math.sqrt(scalar(this));
-    }
-
-    public FullMatrix normalize() {
-        divBy(len());
-        return this;
-    }
-
-    public FullMatrix mulBy(double k) {
-        data.forEach(row -> IntStream.range(0, m).forEach(i -> row.set(i, row.get(i) * k)));
-        return this;
-    }
-
-    public FullMatrix divBy(double k) {
-        data.forEach(row -> IntStream.range(0, m).forEach(i -> row.set(i, row.get(i) / k)));
-        return this;
+    public void swapRows(final int i, final int j) {
+        final Vector temp = data.get(i);
+        data.set(i, data.get(j));
+        data.set(j, temp);
     }
 }

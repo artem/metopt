@@ -72,4 +72,10 @@ public class Vector {
     public double norm() {
         return Math.sqrt(dotprod(this));
     }
+
+    public void swap(final int i, final int j) {
+        final double temp = data[i];
+        data[i] = data[j];
+        data[j] = temp;
+    }
 }
