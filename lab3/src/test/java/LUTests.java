@@ -13,9 +13,9 @@ public class LUTests {
         Matrix matrix = new FullMatrix(
                 new ArrayList<>(
                         List.of(
-                                List.of(x00, x01, x02),
-                                List.of(x10, x11, x12),
-                                List.of(x20, x21, x22))));
+                                new Vector(List.of(x00, x01, x02)),
+                                new Vector(List.of(x10, x11, x12)),
+                                new Vector(List.of(x20, x21, x22)))));
         return new LU(matrix);
     }
 
@@ -50,14 +50,14 @@ public class LUTests {
         // L
         assertEquals(3, lu.getL(0, 0));
         assertEquals(2, lu.getL(1, 0));
-        assertEquals(5-2*4./3, lu.getL(1, 1));
+        assertEquals(5 - 2 * 4. / 3, lu.getL(1, 1));
         assertEquals(7, lu.getL(2, 0));
         assertEquals(-3.333333333333332, lu.getL(2, 1));
         assertEquals(17.837142857142847, lu.getL(2, 2));
         // U
         assertEquals(1, lu.getU(0, 0));
-        assertEquals(1 + 1./3, lu.getU(0, 1));
-        assertEquals(2./3, lu.getU(0, 2));
+        assertEquals(1 + 1. / 3, lu.getU(0, 1));
+        assertEquals(2. / 3, lu.getU(0, 2));
         assertEquals(1, lu.getU(1, 1));
         assertEquals(5.857142857142857, lu.getU(1, 2));
         assertEquals(1, lu.getU(2, 2));

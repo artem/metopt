@@ -16,9 +16,8 @@ public class LU {
     }
 
     public LU(Matrix A) {
+        this.matrix = A;
         int n = A.size();
-        matrix = ProfileMatrix.getFullSizeMatrix(n);
-        matrix.set(0, 0, A.get(0, 0));
         for (int i = 1; i < n; i++) {
             for (int j = 0; j < i; j++) {
                 double Lij = A.get(i, j);
