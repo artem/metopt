@@ -13,7 +13,7 @@ import java.util.Random;
 @SuppressWarnings("unused")
 public class MatrixUtils {
     private static final Path TESTSPATH =
-            Path.of(getClassPath()).getParent().getParent().getParent().getParent().resolve("tests").toAbsolutePath();
+            Path.of(getClassPath()).resolve("../../../../tests").toAbsolutePath();
 
     static {
         if (!Files.exists(TESTSPATH)) {
@@ -78,7 +78,7 @@ public class MatrixUtils {
      * @param k serial number of matrix.
      * @return random profile matrix.
      */
-    private static Matrix generateProfile(final int n, final int k) {
+    public static Matrix generateProfile(final int n, final int k) {
         final Random random = new Random(System.currentTimeMillis());
         final Matrix matrix = new FullMatrix(n, n);
         for (int i = 0; i < n; ++i) {
@@ -106,11 +106,11 @@ public class MatrixUtils {
      * @param n dimension of result matrix.
      * @return random full matrix.
      */
-    private static Matrix generateHilbert(final int n) {
-        final Matrix matrix = new FullMatrix(n, n);
+    public static FullMatrix generateHilbert(final int n) {
+        final FullMatrix matrix = new FullMatrix(n, n);
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < n; ++j) {
-                matrix.set(i, j, 1 / ((double) i + j + 1)); // the same as 1 / (i + j - 1), cause of 0-indexation
+                matrix.set(i, j, 1. / (i + j + 1)); // the same as 1 / (i + j - 1), cause of 0-indexation
             }
         }
         return matrix;
