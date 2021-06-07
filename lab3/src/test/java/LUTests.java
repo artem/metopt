@@ -7,7 +7,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LUTests {
 
-    private LU genLU(double x00, double x01, double x02,
+    public static FullMatrix genMatrix(double x00, double x01, double x02,
+                                   double x10, double x11, double x12,
+                                   double x20, double x21, double x22) {
+        return new FullMatrix(
+                new ArrayList<>(
+                        List.of(
+                                new Vector(List.of(x00, x01, x02)),
+                                new Vector(List.of(x10, x11, x12)),
+                                new Vector(List.of(x20, x21, x22)))));
+    }
+
+    private static LU genLU(double x00, double x01, double x02,
                      double x10, double x11, double x12,
                      double x20, double x21, double x22) {
         Matrix matrix = new FullMatrix(
