@@ -80,7 +80,7 @@ public class MatrixUtils {
      * @return random profile matrix.
      */
     public static Matrix generateProfile(final int n, final int k) {
-        final Random random = new Random(System.currentTimeMillis());
+        final Random random = new Random(12);
         final Matrix matrix = new FullMatrix(n, n);
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < i; ++j) {
