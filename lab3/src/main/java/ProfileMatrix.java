@@ -60,7 +60,9 @@ public class ProfileMatrix extends Matrix {
 
     @Override
     public void set(int i, int j, double value) {
-        getOrSet(i, j, value);
+        if (value != 0) {
+            getOrSet(i, j, value);
+        }
     }
 
     @Override
@@ -78,8 +80,9 @@ public class ProfileMatrix extends Matrix {
         if (len < i-j) {
             if (!check)
                 return -1;
-            else
-                throw new MatrixException("Unable to set this element");
+            else {
+                throw new MatrixException(String.format("Unable to set element [%d][%d]", i, j));
+            }
         }
         return start + len - i + j - 1;
     }

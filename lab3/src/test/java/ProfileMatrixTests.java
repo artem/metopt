@@ -163,4 +163,40 @@ public class ProfileMatrixTests {
             assertEquals(full.toString(), profile.toString());
         }
     }
+
+    void pretestBigFullSize(int n){
+        FullMatrix matrix = new FullMatrix(n, n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix.set(i, j, 1);
+            }
+        }
+        ProfileMatrix profileMatrix = new ProfileMatrix(matrix);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                final int value = (i + 1) * (j + 2) + (i - j) >> 1;
+                matrix.set(i, j, value);
+                profileMatrix.set(i, j, value);
+                assertEquals(value, profileMatrix.get(i, j));
+            }
+        }
+        assertEquals(matrix.toString(), profileMatrix.toString());
+    }
+
+    @Test
+    void testBigSizeFull_5() {
+        pretestBigFullSize(5);
+    }
+
+    @Test
+    void testBigSizeFull_15() {
+        pretestBigFullSize(15);
+    }
+
+    @Test
+    void testBigSizeFull_n() {
+        for (int i = 1; i < 200; i++) {
+            pretestBigFullSize(i);
+        }
+    }
 }
