@@ -193,7 +193,7 @@ public class Utils {
             // опорный элемент
             int m = recentRow;
             for (int k = recentRow; k < n; k++) {
-                if (Math.abs(a.get(k, i)) < Math.abs(a.get(m, i))) {
+                if (a.get(k, i) != 0 && Math.abs(a.get(k, i)) < Math.abs(a.get(m, i))) {
                     m = k;
                 }
             }

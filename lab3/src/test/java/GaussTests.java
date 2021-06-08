@@ -11,22 +11,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GaussTests {
 
-    private static void assertVectorsEquals(Vector expected, Vector actual) {
-        List<Double> expectedList = IntStream.range(0, expected.size())
-                .mapToObj(expected::get).collect(Collectors.toList());
-        List<Double> actualList =IntStream.range(0, expected.size())
-                .mapToObj(actual::get).collect(Collectors.toList());
-        assertEquals(expectedList, actualList);
-    }
-
     private static void assertVectorsSoftEquals(Vector expected, Vector actual, double diff) {
         for (int i = 0; i < expected.size(); i++) {
-            if (actual.get(i) == 0.) {
-                assertTrue(expected.get(i) < diff);
+            if (Math.abs(expected.get(i)) == 0.) {
+                assertTrue(Math.abs(actual.get(i)) < diff - 1);
+            } else {
+                double y = actual.get(i) / expected.get(i);
+                y = Math.abs(y < 1 ? 1 / y : y);
+                assertTrue(Math.abs(y) < diff, i + "; " + y + " expected " + expected.get(i) + " got " + actual.get(i));
             }
-            double y = expected.get(i) / actual.get(i);
-            y = Math.abs(y < 1 ? 1/y : y);
-            assertTrue(Math.abs(y) < diff, i + "; " + y + " expected " + expected.get(i) + " got " + actual.get(i));
         }
     }
 
@@ -34,7 +27,7 @@ public class GaussTests {
     public void testE() {
         FullMatrix matrix = LUTests.genMatrix(1, 0, 0, 0, 1, 0, 0, 0, 1);
         Vector xb = new Vector(List.of(1., 2., 3.));
-        assertVectorsSoftEquals(xb, Utils.Gauss(matrix, xb), 1.0000000001);
+        assertVectorsSoftEquals(xb, Utils.gauss(matrix, xb), 1.0000000001);
     }
 
     @Test
@@ -42,7 +35,7 @@ public class GaussTests {
         FullMatrix matrix = LUTests.genMatrix(3, 7, 8, 1, -5, 5, 4, 2, 3);
         Vector b = new Vector(List.of(1., 2., 3.));
         Vector x = new Vector(List.of(19./22., -5./22, 0.));
-        assertVectorsSoftEquals(x, Utils.Gauss(matrix, b), 1.000000001);
+        assertVectorsSoftEquals(x, Utils.gauss(matrix, b), 1.000000001);
     }
 
     @Test
@@ -50,7 +43,7 @@ public class GaussTests {
         FullMatrix matrix = LUTests.genMatrix(-1, 0.3, 15, -1.5, -10, 3,13.7, 150, -0.2);
         Vector b = new Vector(List.of(45.5, 13.7, -33.2));
         Vector x = new Vector(List.of(-2715971./429880, 30881./85976, 203603./78160));
-        assertVectorsSoftEquals(x, Utils.Gauss(matrix, b), 1.000000001);
+        assertVectorsSoftEquals(x, Utils.gauss(matrix, b), 1.000000001);
     }
 
     @Test
@@ -74,8 +67,8 @@ public class GaussTests {
                 519493634393./9759238282031.,
                 1397776720600./9759238282031.
                 ));
-        Vector result = Utils.Gauss(matrix, b);
-        assertVectorsSoftEquals(x, result, 1.000000000001);
+        Vector result = Utils.gauss(matrix, b);
+        assertVectorsSoftEquals(x, result, 1.00000001);
     }
 
     private void testHilbert(int n, double diff) {
@@ -86,22 +79,22 @@ public class GaussTests {
             v.set(i, random.nextInt(n) + 1);
         }
         Vector b = A.mul(v);
-        Vector x = Utils.Gauss(A, b);
+        Vector x = Utils.gauss(A, b);
         assertVectorsSoftEquals(v, x, diff);
     }
 
     @Test
     public void testHilbert3() {
-        testHilbert(3, 1.0000000001);
+        testHilbert(3, 1.0000001);
     }
 
     @Test
     public void testHilbert6() {
-        testHilbert(6, 1.000000001);
+        testHilbert(6, 1.000001);
     }
 
     @Test
     public void testHilbert10() {
-        testHilbert(10, 1.000000001);
+        testHilbert(10, 1.01);
     }
 }
