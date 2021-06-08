@@ -78,4 +78,11 @@ public class Vector {
         data[i] = data[j];
         data[j] = temp;
     }
+
+    @Override
+    public String toString() {
+        return "Vector{" +
+                "data=" + Arrays.toString(data) +
+                '}';
+    }
 }

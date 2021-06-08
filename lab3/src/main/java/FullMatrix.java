@@ -89,6 +89,7 @@ public class FullMatrix extends Matrix {
         return ret;
     }
 
+    @Override
     public Vector mul(final Vector v) {
         if (v.size() != m) {
             throw new MatrixException("Incompatible matrices");

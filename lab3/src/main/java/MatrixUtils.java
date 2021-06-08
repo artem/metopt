@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Random;
 
 // TODO
@@ -132,7 +133,7 @@ public class MatrixUtils {
                 }
                 break;
             case 2:
-                for (int dimension = 10; dimension <= 1000; dimension *= 10) {
+                for (int dimension = 2; dimension <= 30; dimension += 2) {
                     for (int test = 0; test < amount; ++test) {
                         writeJson(generateHilbert(dimension), getInputPathname(testGroup, dimension, test));
                     }
@@ -148,14 +149,12 @@ public class MatrixUtils {
     public static void testGroup(final int testGroup, final int amount) {
         switch (testGroup) {
             case 1:
-                throw new IllegalArgumentException("Not ready");
-            case 2:
                 System.out.println(
                         "  \\begin{center}\n" +
-                        "    \\begin{tabular}{|c|c|c|c|}\n" +
-                        "        \\hline\n" +
-                        "        $n$ & $k$ & $\\norm{x^*-x_k}$ & $\\norm{x^*-x_k} / \\norm{x^*}$ \\\\\n" +
-                        "        \\hline");
+                                "    \\begin{tabular}{|c|c|c|c|}\n" +
+                                "        \\hline\n" +
+                                "        $n$ & $k$ & $\\norm{x^*-x_k}$ & $\\norm{x^*-x_k} / \\norm{x^*}$ \\\\\n" +
+                                "        \\hline");
 
                 for (int dimension = 10; dimension <= 1000; dimension *= 10) {
                     final Vector x = new Vector(dimension); // exact answer
@@ -164,18 +163,65 @@ public class MatrixUtils {
                     }
                     final double len = x.norm();
                     for (int test = 0; test < amount; ++test) {
-                        final FullMatrix A = readJson(FullMatrix.class, getInputPathname(testGroup, dimension, test));
+                        final Matrix A = readJson(ProfileMatrix.class, getInputPathname(testGroup, dimension, test));
                         final Vector b = A.mul(x);
-                        final Vector y = Utils.gauss(A, b); // calculated answer
+                        final Vector y = Utils.GaussLU(A, b); // calculated answer
+                        if (y == null) {
+                            System.out.printf(
+                                    "        %d & %d & -- & -- \\\\\n" +
+                                            "        \\hline\n",
+                                    dimension,
+                                    test);
+                            continue;
+                        }
                         final double delta = x.sub(y).norm();
                         System.out.printf(
                                 "        %d & %d & %.9f & %.9f \\\\\n" +
-                                "        \\hline\n",
+                                        "        \\hline\n",
                                 dimension,
                                 test,
                                 delta,
                                 delta / len);
                     }
+                }
+
+                System.out.println(
+                        "    \\end{tabular}\n" +
+                                "  \\end{center}\n");
+                break;
+            case 2:
+                System.out.println(
+                        "  \\begin{center}\n" +
+                        "    \\begin{tabular}{|c|c|c|c|}\n" +
+                        "        \\hline\n" +
+                        "        $n$ & $k$ & $\\norm{x^*-x_k}$ & $\\norm{x^*-x_k} / \\norm{x^*}$ \\\\\n" +
+                        "        \\hline");
+
+                for (int dimension = 2; dimension <= 30; dimension += 2) {
+                    final Vector x = new Vector(dimension); // exact answer
+                    for (int i = 0; i < dimension; ++i) {
+                        x.set(i, i + 1);
+                    }
+                    final double len = x.norm();
+                    final FullMatrix A = readJson(FullMatrix.class, getInputPathname(testGroup, dimension, 0));
+                    final Vector b = A.mul(x);
+                    final Vector y = Utils.Gauss(A, b); // calculated answer
+                    if (y == null) {
+                        System.out.printf(
+                                "        %d & %d & -- & -- \\\\\n" +
+                                        "        \\hline\n",
+                                dimension,
+                                0);
+                        continue;
+                    }
+                    final double delta = x.sub(y).norm();
+                    System.out.printf(
+                            "        %d & %d & %.9f & %.9f \\\\\n" +
+                            "        \\hline\n",
+                            dimension,
+                            0,
+                            delta,
+                            delta / len);
                 }
 
                 System.out.println(
@@ -190,8 +236,17 @@ public class MatrixUtils {
     }
 
     public static void main(String[] args) {
-        generateTestGroup(2, 5);
+        final int testGroup = 1;
+        final int amount = 5;
+        generateTestGroup(testGroup, amount);
         System.out.println("Tests generated");
-        testGroup(2, 5);
+        testGroup(testGroup, amount);
+//        final Matrix A = new FullMatrix(
+//                List.of(
+//                        new Vector(List.of(2.0, 3.0)),
+//                        new Vector(List.of(5.0, 3.0))
+//                ));
+//        final Vector B = new Vector(List.of(1.0, 7.0));
+//        System.out.println(Utils.Gauss(A, B));
     }
 }

@@ -45,4 +45,20 @@ public abstract class Matrix {
         }
         return result.toString();
     }
+
+    public Vector mul(final Vector v) {
+        final int n = size();
+        if (v.size() != n) {
+            throw new MatrixException("Incompatible matrices");
+        }
+        final Vector result = new Vector(n);
+        for (int i = 0; i < n; ++i) {
+            double value = 0;
+            for (int j = 0; j < n; ++j) {
+                value += get(i, j) * v.get(j);
+            }
+            result.set(i, value);
+        }
+        return result;
+    }
 }
