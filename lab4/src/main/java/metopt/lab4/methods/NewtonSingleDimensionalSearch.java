@@ -7,18 +7,20 @@ import metopt.lab4.matrices.Matrix;
 import metopt.lab4.matrices.Vector;
 
 public class NewtonSingleDimensionalSearch implements Method {
-    public Result run(final AbstractFunction function, final Vector x0, double eps) {
+    public Result<Double> run(final AbstractFunction function, final Vector x0, double eps) {
         Vector x = x0;
-        int iterations = 0;
-        while (true) {
-            iterations++;
+        for (Result<Double> result = new Result<>(); true; result.iterations++) {
             Vector gradient = function.gradient(x);
             Matrix hessian = function.hessian(x);
             Vector p = Utils.gauss(hessian, gradient.negBy());
-            double a = SingleDimensionMethods.goldenRatio(z -> function.eval(x.add(p.mul(z))), eps, -20, 20);
-            x.addBy(p.mul(a));
+            double alpha = SingleDimensionMethods.goldenRatio(z -> function.eval(x.add(p.mul(z))), eps, -20, 20);
+            p.mulBy(alpha);
+            x.addBy(p);
+            result.list.add(p);
+            result.additional.add(alpha);
             if (p.norm() <= eps) {
-                return new Result(x, iterations);
+                result.x = x;
+                return result;
             }
         }
     }
