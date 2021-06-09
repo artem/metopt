@@ -198,9 +198,10 @@ class GUI:
         self.min_x_label['text'] = self.steps[-1].T
         self.min_y_label['text'] = self.function.eval(self.steps[-1])
         self.steps_label['text'] = self.steps.shape[0] - 1
-        self.steps_controller = SteppingController(self.steps)
-        self.center, self.size = self.steps_controller.get_radius()
-        self.paint_main_function()
+        if self.steps.shape[1] == 2:
+            self.steps_controller = SteppingController(self.steps)
+            self.center, self.size = self.steps_controller.get_radius()
+            self.paint_main_function()
 
     def paint_main_function(self):
         if not self.function or self.function.b.shape[0] != 2:

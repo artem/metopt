@@ -11,19 +11,7 @@ public class SteepestDescent implements Method {
         this.eps = eps;
     }
     private double findMin(UnaryOperator<Double> g) {
-        double t = 1.0;
-        double pt = 0.0;
-        double ppt = pt;
-        double gt = g.apply(t);
-        double pgt = g.apply(pt);
-        while (gt <= pgt) {
-            ppt = pt;
-            pt = t;
-            t *= 2;
-            pgt = gt;
-            gt = g.apply(t);
-        }
-        return SingleDimensionMethods.fib(g, eps, ppt, t);
+        return SingleDimensionMethods.fib(g, eps, 0, 1000);
     }
 
     public Trace process() throws MatrixException {
@@ -42,6 +30,7 @@ public class SteepestDescent implements Method {
             x.addBy(p.mulBy(a)); // we don't need p anymore, so we can mulBy it
             p = f.gradient(x).negate();
             result.add(new Matrix(x));
+//            result.add(null);
         }
 
         return result;

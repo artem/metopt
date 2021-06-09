@@ -37,11 +37,11 @@ public class Tests {
         for (int i = 0; i < functions.size(); ++i) {
             AbstractFunction f = functions.get(i);
             sb.append(String.format("         $F_%d$ & ", i + 1));
-            addEntry(sb, new GradientDescent(f, eps, l.get(i), L.get(i)).process(), f);
-            sb.append(" & ");
+//            addEntry(sb, new GradientDescent(f, eps, l.get(i), L.get(i)).process(), f);
+//            sb.append(" & ");
             addEntry(sb, new SteepestDescent(f, eps).process(), f);
-            sb.append(" & ");
-            addEntry(sb, new ConjugateGradient(f, eps).process(), f);
+//            sb.append(" & ");
+//            addEntry(sb, new ConjugateGradient(f, eps).process(), f);
             sb.append(" \\\\ \\hline\n");
         }
         System.out.println(sb);
@@ -84,7 +84,7 @@ public class Tests {
 
     @SuppressWarnings("unused")
     private static void testDimensionAndConditioning() {
-        for (int dimension = 10; dimension <= 10_000; dimension *= 10) {
+        for (int dimension = 10_000; dimension <= 10_000; dimension *= 10) {
             testConditioning(dimension);
         }
     }
