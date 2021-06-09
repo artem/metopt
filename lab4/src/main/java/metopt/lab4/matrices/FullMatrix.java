@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class FullMatrix extends Matrix {
-    protected final int n;
-    protected final int m; // square matrix??
     protected final List<Vector> data;
 
     public FullMatrix(int n, int m) {
@@ -36,6 +34,10 @@ public class FullMatrix extends Matrix {
 
     public FullMatrix(FullMatrix other) {
         this(other.data);
+    }
+
+    public FullMatrix(Vector other) {
+        this(List.of(other));
     }
 
     public FullMatrix(Matrix other) {
@@ -97,7 +99,7 @@ public class FullMatrix extends Matrix {
         return result;
     }
 
-    public FullMatrix mul(FullMatrix other) {
+    public FullMatrix mul(Matrix other) {
         if (m != other.n) {
             throw new IllegalArgumentException("Incompatible matrices.");
         }

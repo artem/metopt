@@ -3,6 +3,9 @@ package metopt.lab4.matrices;
 import java.util.stream.IntStream;
 
 public abstract class Matrix {
+    public int n;
+    public int m;
+
     abstract public int size();
     abstract public double get(int i, int j);
     abstract public void set(int i, int j, double value);
@@ -68,6 +71,19 @@ public abstract class Matrix {
             }
         }
         return ret;
+    }
+
+    public Matrix hadamard(Matrix other) {
+        return new FullMatrix(this).hadamardBy(other);
+    }
+
+    public Matrix hadamardBy(Matrix other) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                set(i, j, get(i, j) * other.get(i, j));
+            }
+        }
+        return this;
     }
 
     @Override

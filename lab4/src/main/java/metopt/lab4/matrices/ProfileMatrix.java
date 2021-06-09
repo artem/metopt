@@ -3,10 +3,10 @@ package metopt.lab4.matrices;
 public class ProfileMatrix extends Matrix {
     double[] diag, inRows, inCols;
     int[] profile;
-    int n;
 
     public ProfileMatrix(Matrix other) {
         n = other.size();
+        m = other.size();
         diag = new double[n];
         profile = new int[n+1];
         profile[0] = profile[1] = 1;

@@ -1,5 +1,6 @@
 package metopt.lab4.functions;
 
+import metopt.lab4.matrices.FullMatrix;
 import metopt.lab4.matrices.Matrix;
 import metopt.lab4.matrices.Vector;
 
@@ -19,7 +20,10 @@ public abstract class AbstractFunction {
         this.x0 = x0;
     }
 
-    public abstract Matrix hessian(final Vector x);
+    public Matrix hessian(final Vector x) {
+        Matrix b = new FullMatrix(x).mul(new FullMatrix(x).transpose());
+        return A.hadamard(b);
+    }
 
     public double eval(final Vector x) {
         return A.mul(x).scalar(x) / 2 + b.scalar(x) + c;
