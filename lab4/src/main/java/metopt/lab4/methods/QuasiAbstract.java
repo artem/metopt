@@ -8,7 +8,7 @@ import metopt.lab4.matrices.Vector;
 
 public abstract class QuasiAbstract implements Method{
 
-    public abstract Matrix nextG(Matrix lastG, Vector dx, Vector dw);
+    public abstract Matrix nextG(final Matrix lastG, final Vector dx, final Vector dw);
 
     private double findAlpha(final AbstractFunction function, final Vector x, final Vector p) {
         return SingleDimensionMethods.goldenRatio(z -> function.eval(x.add(p.mul(z))), 1e-9, -20, 20);
