@@ -5,7 +5,7 @@ import metopt.lab4.matrices.Vector;
 
 import java.util.List;
 
-public class Function2 extends AbstractFunction {
+public class Function2 extends QuadraticFunction {
     public Function2() {
         super(new FullMatrix(List.of(
                 new Vector(List.of(2.*254, 506.)),

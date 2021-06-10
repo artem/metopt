@@ -1,7 +1,7 @@
 package metopt.lab4.methods;
 
 import metopt.lab4.Result;
-import metopt.lab4.functions.AbstractFunction;
+import metopt.lab4.functions.QuadraticFunction;
 import metopt.lab4.matrices.FullMatrix;
 import metopt.lab4.matrices.Matrix;
 import metopt.lab4.matrices.Vector;
@@ -10,12 +10,12 @@ public abstract class QuasiAbstract implements Method {
 
     public abstract Matrix nextG(final Matrix lastG, final Vector dx, final Vector dw);
 
-    private double findAlpha(final AbstractFunction function, final Vector x, final Vector p) {
+    private double findAlpha(final QuadraticFunction function, final Vector x, final Vector p) {
         return SingleDimensionMethods.goldenRatio(z -> function.eval(x.add(p.mul(z))), 1e-8, -30, 30);
     }
 
     @Override
-    public Result run(final AbstractFunction function, final Vector x0, double eps) {
+    public Result run(final QuadraticFunction function, final Vector x0, double eps) {
         Result result = new Result();
         Vector x = new Vector(x0);
         result.addStep(x);

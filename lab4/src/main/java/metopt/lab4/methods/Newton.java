@@ -2,12 +2,12 @@ package metopt.lab4.methods;
 
 import metopt.lab4.Result;
 import metopt.lab4.Utils;
-import metopt.lab4.functions.AbstractFunction;
+import metopt.lab4.functions.QuadraticFunction;
 import metopt.lab4.matrices.Matrix;
 import metopt.lab4.matrices.Vector;
 
 public class Newton implements Method {
-    public Result run(final AbstractFunction function, final Vector x0, double eps) {
+    public Result run(final QuadraticFunction function, final Vector x0, double eps) {
         Result result = new Result();
         Vector x = x0;
         result.addStep(x);

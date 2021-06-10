@@ -15,6 +15,10 @@ public interface FunI extends ToDoubleFunction<Vector> {
         return eval(x);
     }
 
+    String getName();
+
+    Vector getX0();
+
     Vector gradient(final Vector x);
 
     static String variable(int i) {

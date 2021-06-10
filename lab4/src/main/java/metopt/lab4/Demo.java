@@ -1,6 +1,6 @@
 package metopt.lab4;
 
-import metopt.lab4.functions.AbstractFunction;
+import metopt.lab4.functions.QuadraticFunction;
 import metopt.lab4.functions.Function1;
 import metopt.lab4.functions.Function2;
 import metopt.lab4.matrices.Vector;
@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 
 public class Demo {
     private static final double EPS = 1e-6;
-    private static final List<AbstractFunction> functions = List.of(
+    private static final List<QuadraticFunction> functions = List.of(
             new Function1(),
             new Function2()
     );
@@ -34,9 +34,9 @@ public class Demo {
                 " ]";
     }
 
-    private static void testSimpleDimple(Method method, AbstractFunction function, Vector x0) {
+    private static void testSimpleDimple(Method method, QuadraticFunction function, Vector x0) {
         Result result = method.run(function, new Vector(x0), EPS);
-        System.out.println(function.name);
+        System.out.println(function.getName());
         System.out.println("x0: " + result.x);
         System.out.println("iterations: " + result.iterations);
         System.out.println("value:" + function.eval(result.x));
@@ -49,8 +49,8 @@ public class Demo {
         }
     }
 
-    private static void testSimpleDimple(Method method, AbstractFunction function) {
-        testSimpleDimple(method, function, function.x0);
+    private static void testSimpleDimple(Method method, QuadraticFunction function) {
+        testSimpleDimple(method, function, function.getX0());
     }
 
     private static void testMethod(Method method) {

@@ -11,19 +11,22 @@ public class UnfunnyFunction implements FunI {
     private final ToDoubleFunction<Vector> function;
     private final UnaryOperator<Vector> gradient;
     private final Function<Vector, Matrix> hessian;
+    private final String name;
     private final Vector minVector;
 
-    public UnfunnyFunction(ToDoubleFunction<Vector> function, UnaryOperator<Vector> gradient, Function<Vector, Matrix> hessian) {
+    public UnfunnyFunction(ToDoubleFunction<Vector> function, UnaryOperator<Vector> gradient, Function<Vector, Matrix> hessian, String name) {
         this.function = function;
         this.gradient = gradient;
         this.hessian = hessian;
+        this.name = name;
         minVector = null;
     }
 
-    public UnfunnyFunction(ToDoubleFunction<Vector> function, UnaryOperator<Vector> gradient, Function<Vector, Matrix> hessian, Vector minVector) {
+    public UnfunnyFunction(ToDoubleFunction<Vector> function, UnaryOperator<Vector> gradient, Function<Vector, Matrix> hessian, String name, Vector minVector) {
         this.function = function;
         this.gradient = gradient;
         this.hessian = hessian;
+        this.name = name;
         this.minVector = minVector;
     }
 
@@ -35,6 +38,16 @@ public class UnfunnyFunction implements FunI {
     @Override
     public double eval(Vector x) {
         return function.applyAsDouble(x);
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public Vector getX0() {
+        return null; // FIXME
     }
 
     @Override

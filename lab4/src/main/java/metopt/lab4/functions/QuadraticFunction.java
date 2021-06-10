@@ -6,14 +6,14 @@ import metopt.lab4.matrices.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractFunction implements FunI {
-    final public Matrix A;
-    final public Vector b;
-    final public double c;
-    final public Vector x0;
-    final public String name;
+public class QuadraticFunction implements FunI {
+    final private Matrix A;
+    final private Vector b;
+    final private double c;
+    final private Vector x0;
+    final private String name;
 
-    public AbstractFunction(final Matrix a, final Vector b, final double c, final Vector x0, final String name) {
+    public QuadraticFunction(final Matrix a, final Vector b, final double c, final Vector x0, final String name) {
         A = a;
         this.b = b;
         this.c = c;
@@ -21,7 +21,7 @@ public abstract class AbstractFunction implements FunI {
         this.name = name;
     }
 
-    public AbstractFunction(final Matrix a, final Vector b, final double c, final Vector x0) {
+    public QuadraticFunction(final Matrix a, final Vector b, final double c, final Vector x0) {
         this(a, b, c, x0, "");
     }
 
@@ -33,6 +33,16 @@ public abstract class AbstractFunction implements FunI {
     @Override
     public double eval(final Vector x) {
         return A.mul(x).scalar(x) / 2 + b.scalar(x) + c;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public Vector getX0() {
+        return x0;
     }
 
     @Override
