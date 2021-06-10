@@ -208,9 +208,9 @@ class GUI:
                 (type(self.function) != "<class 'function_eval.FunctionEval'>" and self.function.b.shape[0] != 2):
             return
 
-        print(type(self.function))
         if values.actions.index(self.current_action.get()) == 2:
-            func_str, dots_str = self.text_editor.get("1.0", 'end-1c').split('#')
+            center, func_str, dots_str = self.text_editor.get("1.0", 'end-1c').split('#')
+            self.center = np.asarray(json.loads(center))
             self.function = function_eval.FunctionEval(func_str)
             self.steps = np.asarray(json.loads(dots_str))
 
