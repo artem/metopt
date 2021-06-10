@@ -32,6 +32,14 @@ public class Vector {
         return data[index];
     }
 
+    public double x() {
+        return get(0);
+    }
+
+    public double y() {
+        return get(1);
+    }
+
     public void set(final int index, final double value) {
         data[index] = value;
     }
