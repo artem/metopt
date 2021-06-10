@@ -6,6 +6,7 @@ import numpy as np
 from pylab import cm, imshow, contour, clabel, colorbar, title, show
 
 import function
+import function_eval
 import values
 import query
 import matplotlib.pyplot as plt
@@ -203,14 +204,13 @@ class GUI:
             self.paint_main_function()
 
     def paint_main_function(self):
-        if values.actions.index(self.current_action.get()) == 2:
-            func_str, dots_str = self.text_editor.get("1.0", 'end-1c').split('#')
-            func = json.loads(func_str)
-            self.function = function.Function(func['A']['data'], func['b']['data'], func['c'], func['x0']['data'])
-            self.steps = np.asarray(json.loads(dots_str))
-
         if not self.function or self.function.b.shape[0] != 2:
             return
+
+        if values.actions.index(self.current_action.get()) == 2:
+            func_str, dots_str = self.text_editor.get("1.0", 'end-1c').split('#')
+            self.function = function_eval.FunctionEval(func_str)
+            self.steps = np.asarray(json.loads(dots_str))
 
         plt.cla()
         plt.clf()
