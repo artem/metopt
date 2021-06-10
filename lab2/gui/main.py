@@ -204,9 +204,11 @@ class GUI:
             self.paint_main_function()
 
     def paint_main_function(self):
-        if not self.function or self.function.b.shape[0] != 2:
+        if not self.function or \
+                (type(self.function) != "<class 'function_eval.FunctionEval'>" and self.function.b.shape[0] != 2):
             return
 
+        print(type(self.function))
         if values.actions.index(self.current_action.get()) == 2:
             func_str, dots_str = self.text_editor.get("1.0", 'end-1c').split('#')
             self.function = function_eval.FunctionEval(func_str)
