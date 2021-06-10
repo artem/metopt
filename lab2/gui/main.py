@@ -205,19 +205,21 @@ class GUI:
 
     def paint_main_function(self):
         if not self.function or \
-                (type(self.function) != "<class 'function_eval.FunctionEval'>" and self.function.b.shape[0] != 2):
+                (type(self.function).__name__ != 'FunctionEval' and self.function.b.shape[0] != 2):
             return
 
         if values.actions.index(self.current_action.get()) == 2:
-            center, func_str, dots_str = self.text_editor.get("1.0", 'end-1c').split('#')
+            radius, center, func_str, dots_str = self.text_editor.get("1.0", 'end-1c').split('#')
+            self.radius = float(radius)
             self.center = np.asarray(json.loads(center))
             self.function = function_eval.FunctionEval(func_str)
             self.steps = np.asarray(json.loads(dots_str))
+        else:
+            zoom = (int(self.zoom_entry.get()) ** 3)
+            self.radius = self.size / zoom
 
         plt.cla()
         plt.clf()
-        zoom = (int(self.zoom_entry.get()) ** 3)
-        self.radius = self.size / zoom
         x = np.arange(self.center[0] - self.radius, self.center[0] + self.radius, self.radius / 50)
         y = np.arange(self.center[1] - self.radius, self.center[1] + self.radius, self.radius / 50)
         z = np.array([[self.function.eval(np.array([j, i]).T)[0] for j in x] for i in y])
