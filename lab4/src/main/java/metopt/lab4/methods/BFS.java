@@ -1,8 +1,5 @@
 package metopt.lab4.methods;
 
-import metopt.lab4.Result;
-import metopt.lab4.functions.AbstractFunction;
-import metopt.lab4.matrices.FullMatrix;
 import metopt.lab4.matrices.Matrix;
 import metopt.lab4.matrices.Vector;
 

@@ -4,7 +4,6 @@ import metopt.lab4.Result;
 import metopt.lab4.Utils;
 import metopt.lab4.functions.AbstractFunction;
 import metopt.lab4.matrices.Matrix;
-import metopt.lab4.matrices.ProfileMatrix;
 import metopt.lab4.matrices.Vector;
 
 public class NewtonDirectionChoosing implements Method {
