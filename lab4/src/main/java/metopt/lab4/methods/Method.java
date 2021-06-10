@@ -6,4 +6,6 @@ import metopt.lab4.matrices.Vector;
 
 public interface Method {
     public Result run(AbstractFunction function, Vector x0, double eps);
+
+    public String name();
 }

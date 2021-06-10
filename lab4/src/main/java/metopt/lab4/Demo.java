@@ -8,14 +8,23 @@ import metopt.lab4.methods.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Demo {
     private static final double EPS = 1e-6;
     private static final List<AbstractFunction> functions = List.of(
-        new Function1(),
-        new Function2()
+            new Function1(),
+            new Function2()
+    );
+
+    private static final List<Method> methods = List.of(
+            new Newton(),
+            new NewtonSingleDimensionalSearch(),
+            new NewtonDirectionChoosing(),
+            new BFS(),
+            new Powell()
     );
 
     private static String getStringVector(Vector vector) {
@@ -44,16 +53,21 @@ public class Demo {
         testSimpleDimple(method, function, function.x0);
     }
 
-    private static void testMethod(Method method, String methodName) {
-        System.out.println("\n\t\t" + methodName);
+    private static void testMethod(Method method) {
+        System.out.println("\n\t\t" + method.name());
         functions.forEach(f -> testSimpleDimple(method, f));
     }
 
+    private static void testIterations() {
+        System.out.println();
+    }
+
     public static void main(String[] args) {
-        testMethod(new Newton(), "Newton");
-        testMethod(new NewtonSingleDimensionalSearch(), "Newton одномерная оптимизация");
-        testMethod(new NewtonDirectionChoosing(), "Newton поиск направления");
-        testMethod(new BFS(), "БФШ");
-        testMethod(new Powell(), "Пауэлл");
+        testMethod(new Newton());
+        testMethod(new NewtonSingleDimensionalSearch());
+        testMethod(new NewtonDirectionChoosing());
+        testMethod(new BFS());
+        testMethod(new Powell());
+        testMethod(new Powell());
     }
 }

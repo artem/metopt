@@ -6,7 +6,7 @@ import metopt.lab4.matrices.FullMatrix;
 import metopt.lab4.matrices.Matrix;
 import metopt.lab4.matrices.Vector;
 
-public abstract class QuasiAbstract implements Method{
+public abstract class QuasiAbstract implements Method {
 
     public abstract Matrix nextG(final Matrix lastG, final Vector dx, final Vector dw);
 

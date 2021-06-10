@@ -4,7 +4,6 @@ import metopt.lab4.Result;
 import metopt.lab4.Utils;
 import metopt.lab4.functions.AbstractFunction;
 import metopt.lab4.matrices.Matrix;
-import metopt.lab4.matrices.ProfileMatrix;
 import metopt.lab4.matrices.Vector;
 
 public class NewtonDirectionChoosing implements Method {
@@ -18,7 +17,7 @@ public class NewtonDirectionChoosing implements Method {
         Vector p = antiGrad.mul(alpha);
         x.addBy(p);
         result.addStep(x);
-        for (result.iterations=2; true; result.iterations++) {
+        for (result.iterations = 2; true; result.iterations++) {
             Vector gradient = function.gradient(x);
             Matrix hessian = function.hessian(x);
             p = Utils.gauss(hessian, gradient.neg());
@@ -38,5 +37,10 @@ public class NewtonDirectionChoosing implements Method {
                 return result;
             }
         }
+    }
+
+    @Override
+    public String name() {
+        return "Метод ньютона с выбором направления";
     }
 }

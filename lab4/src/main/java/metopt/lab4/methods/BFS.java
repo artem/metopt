@@ -1,8 +1,5 @@
 package metopt.lab4.methods;
 
-import metopt.lab4.Result;
-import metopt.lab4.functions.AbstractFunction;
-import metopt.lab4.matrices.FullMatrix;
 import metopt.lab4.matrices.Matrix;
 import metopt.lab4.matrices.Vector;
 
@@ -19,5 +16,10 @@ public class BFS extends QuasiAbstract {
         Matrix second = v.mul(dw).mul(G.transpose()).mul(1 / rho).negBy();
         Matrix third = r.mul(rho).mul(r);
         return G.add(first).add(second).add(third);
+    }
+
+    @Override
+    public String name() {
+        return "Метод Бройдена-Флетчера-Шенно";
     }
 }

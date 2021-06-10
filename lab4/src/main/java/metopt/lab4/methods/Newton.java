@@ -22,4 +22,9 @@ public class Newton implements Method {
             }
         }
     }
+
+    @Override
+    public String name() {
+        return "Метод ньютона";
+    }
 }

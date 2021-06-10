@@ -25,4 +25,9 @@ public class NewtonSingleDimensionalSearch implements Method {
             }
         }
     }
+
+    @Override
+    public String name() {
+        return "Метод Ньютона с одномерной оптимизации";
+    }
 }

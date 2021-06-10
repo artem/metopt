@@ -11,4 +11,9 @@ public class Powell extends QuasiAbstract {
         Matrix subtrahend = dxt.mul(dxt).mul(1 / dw.scalar(dxt)).negBy();
         return G.add(subtrahend);
     }
+
+    @Override
+    public String name() {
+        return "Метод Пауэлла";
+    }
 }
