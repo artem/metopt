@@ -26,7 +26,7 @@ public class Demo {
     }
 
     private static void testSimpleDimple(Method method, AbstractFunction function, Vector x0) {
-        Result result = method.run(function, x0, EPS);
+        Result result = method.run(function, new Vector(x0), EPS);
         System.out.println(function.name);
         System.out.println("x0: " + result.x);
         System.out.println("iterations: " + result.iterations);
