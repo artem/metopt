@@ -15,8 +15,8 @@ public abstract class QuasiAbstract implements Method{
     }
 
     @Override
-    public Result<Double> run(final AbstractFunction function, final Vector x0, double eps) {
-        Result<Double> result = new Result<>();
+    public Result run(final AbstractFunction function, final Vector x0, double eps) {
+        Result result = new Result();
         Vector x = new Vector(x0);
         Matrix G = FullMatrix.E(x0.size());
         Vector w = function.gradient(x).negBy();

@@ -112,7 +112,7 @@ public abstract class Matrix {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder(String.format("metopt.lab4.matrices.Matrix %dx%d\n", size(), size()));
+        StringBuilder result = new StringBuilder(String.format("Matrix %dx%d\n", size(), size()));
         for (int i = 0; i < size(); ++i) {
             for (int j = 0; j < size(); j++) {
                 result.append(get(i, j)).append(" ");

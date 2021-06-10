@@ -8,14 +8,14 @@ import metopt.lab4.matrices.ProfileMatrix;
 import metopt.lab4.matrices.Vector;
 
 public class NewtonDirectionChoosing implements Method {
-    public Result<Double> run(final AbstractFunction function, final Vector x0, double eps) {
+    public Result run(final AbstractFunction function, final Vector x0, double eps) {
         Vector x = x0;
         Vector antiGrad = function.gradient(x).negBy();
         Vector finalAntiGrad = antiGrad;
         double alpha = SingleDimensionMethods.goldenRatio(z -> function.eval(x0.add(finalAntiGrad.mul(z))), eps, -20, 20);
         Vector p = antiGrad.mul(alpha);
         x.addBy(p);
-        for (Result<Double> result = new Result<>(); true; result.iterations++) {
+        for (Result result = new Result(); true; result.iterations++) {
             Vector gradient = function.gradient(x);
             Matrix hessian = function.hessian(x);
             p = Utils.gauss(hessian, gradient.neg());

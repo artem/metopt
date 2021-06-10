@@ -63,11 +63,11 @@ public class FullMatrix extends Matrix {
     }
 
     @Override
-    public Matrix transpose() {
-        final Matrix ret = new FullMatrix(m, n);
+    public FullMatrix transpose() {
+        final FullMatrix ret = new FullMatrix(m, n);
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < m; ++j) {
-                ret.set(i, j, get(j, i));
+                ret.set(j, i, get(i, j));
             }
         }
         return ret;

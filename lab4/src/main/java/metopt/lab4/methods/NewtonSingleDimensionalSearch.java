@@ -7,9 +7,9 @@ import metopt.lab4.matrices.Matrix;
 import metopt.lab4.matrices.Vector;
 
 public class NewtonSingleDimensionalSearch implements Method {
-    public Result<Double> run(final AbstractFunction function, final Vector x0, double eps) {
+    public Result run(final AbstractFunction function, final Vector x0, double eps) {
         Vector x = x0;
-        for (Result<Double> result = new Result<>(); true; result.iterations++) {
+        for (Result result = new Result(); true; result.iterations++) {
             Vector gradient = function.gradient(x);
             Matrix hessian = function.hessian(x);
             Vector p = Utils.gauss(hessian, gradient.negBy());

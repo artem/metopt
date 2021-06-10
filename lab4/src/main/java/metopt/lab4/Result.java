@@ -5,10 +5,10 @@ import metopt.lab4.matrices.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Result<T> {
+public class Result {
     public Vector x;
     public final List<Vector> list;
-    public final List<T> additional;
+    public final List<Double> additional;
     public int iterations;
 
 

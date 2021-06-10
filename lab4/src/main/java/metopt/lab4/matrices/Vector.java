@@ -63,7 +63,7 @@ public class Vector {
     }
 
     public FullMatrix mul(final Vector other) {
-        return toMatrix().mul(other.toMatrix().transpose());
+        return toMatrix().transpose().mul(other.toMatrix());
     }
 
     public Vector mul(final double k) {
@@ -116,7 +116,7 @@ public class Vector {
 
     @Override
     public String toString() {
-        return "metopt.lab4.matrices.Vector{" +
+        return "Vector{" +
                 "data=" + Arrays.toString(data) +
                 '}';
     }

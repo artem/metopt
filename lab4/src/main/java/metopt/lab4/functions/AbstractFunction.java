@@ -21,8 +21,7 @@ public abstract class AbstractFunction {
     }
 
     public Matrix hessian(final Vector x) {
-        Matrix b = new FullMatrix(x).mul(new FullMatrix(x).transpose());
-        return A.hadamard(b);
+        return A;
     }
 
     public double eval(final Vector x) {
