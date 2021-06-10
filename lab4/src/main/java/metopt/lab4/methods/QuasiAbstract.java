@@ -11,13 +11,14 @@ public abstract class QuasiAbstract implements Method{
     public abstract Matrix nextG(final Matrix lastG, final Vector dx, final Vector dw);
 
     private double findAlpha(final AbstractFunction function, final Vector x, final Vector p) {
-        return SingleDimensionMethods.goldenRatio(z -> function.eval(x.add(p.mul(z))), 1e-9, -20, 20);
+        return SingleDimensionMethods.goldenRatio(z -> function.eval(x.add(p.mul(z))), 1e-8, -20, 20);
     }
 
     @Override
     public Result run(final AbstractFunction function, final Vector x0, double eps) {
         Result result = new Result();
         Vector x = new Vector(x0);
+        result.addStep(x);
         Matrix G = FullMatrix.E(x0.size());
         Vector w = function.gradient(x).negBy();
         Vector p = null;
@@ -33,11 +34,11 @@ public abstract class QuasiAbstract implements Method{
                 p = w;
             }
             double alpha = findAlpha(function, x, p);
-            result.list.add(p);
-            result.additional.add(alpha);
             Vector lastX = x;
             x = lastX.add(p.mul(alpha));
             dx = x.sub(lastX);
+            result.addStep(x);
+            result.additional.add(alpha);
             result.iterations++;
         } while (x.norm() < eps);
         result.x = x;

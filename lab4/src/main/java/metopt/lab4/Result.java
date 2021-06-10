@@ -16,4 +16,8 @@ public class Result {
         list = new ArrayList<>();
         additional = new ArrayList<>();
     }
+
+    public void addStep(Vector v) {
+        list.add(new Vector(v));
+    }
 }

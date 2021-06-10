@@ -7,10 +7,16 @@ import metopt.lab4.matrices.Vector;
 import metopt.lab4.methods.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Demo {
+    private static final double EPS = 1e-6;
+    private static final List<AbstractFunction> functions = List.of(
+        new Function1(),
+        new Function2()
+    );
 
     private static String getStringVector(Vector vector) {
         return "[ " +
@@ -20,11 +26,11 @@ public class Demo {
     }
 
     private static void testSimpleDimple(Method method, AbstractFunction function, Vector x0) {
-        Result result = method.run(function, x0, 1e-7);
+        Result result = method.run(function, x0, EPS);
+        System.out.println(function.name);
         System.out.println("x0: " + result.x);
         System.out.println("iterations: " + result.iterations);
         System.out.println("value:" + function.eval(result.x));
-        System.out.println(result.iterations);
         System.out.println("Steps:");
         System.out.println("[ " +
                 result.list.stream().map(Demo::getStringVector).collect(Collectors.joining(",\n")) +
@@ -38,36 +44,16 @@ public class Demo {
         testSimpleDimple(method, function, function.x0);
     }
 
+    private static void testMethod(Method method, String methodName) {
+        System.out.println("\n\t\t" + methodName);
+        functions.forEach(f -> testSimpleDimple(method, f));
+    }
+
     public static void main(String[] args) {
-        System.out.println("\t\tNewton classic");
-
-        System.out.println("Function1");
-        testSimpleDimple(new Newton(), new Function1());
-        System.out.println("Function2");
-        testSimpleDimple(new Newton(), new Function2());
-
-        System.out.println("\t\tNewton одномерная оптимизация");
-        System.out.println("Function1");
-        testSimpleDimple(new NewtonSingleDimensionalSearch(), new Function1());
-        System.out.println("Function2");
-        testSimpleDimple(new NewtonSingleDimensionalSearch(), new Function2());
-
-        System.out.println("\t\tNewton поиск направления");
-        System.out.println("Function1");
-        testSimpleDimple(new NewtonDirectionChoosing(), new Function1());
-        System.out.println("Function2");
-        testSimpleDimple(new NewtonDirectionChoosing(), new Function2());
-
-        System.out.println("\t\tBFS");
-        System.out.println("Function1");
-        testSimpleDimple(new BFS(), new Function1());
-        System.out.println("Function2");
-        testSimpleDimple(new BFS(), new Function2());
-
-        System.out.println("\t\tPowell");
-        System.out.println("Function1");
-        testSimpleDimple(new Powell(), new Function1());
-        System.out.println("Function2");
-        testSimpleDimple(new Powell(), new Function2());
+        testMethod(new Newton(), "Newton");
+        testMethod(new NewtonSingleDimensionalSearch(), "Newton одномерная оптимизация");
+        testMethod(new NewtonDirectionChoosing(), "Newton поиск направления");
+        testMethod(new BFS(), "БФШ");
+        testMethod(new Powell(), "Пауэлл");
     }
 }
