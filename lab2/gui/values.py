@@ -12,7 +12,8 @@ methods = ["Градиентного спуска",
            "Сопряженных градиентов"]
 
 actions = ["Execute method",
-           "Use custom function"]
+           "Use custom function",
+           "Just paint"]
 
 jar_path = "../build/distributions/lib/lab2-0.1-all.jar"
 

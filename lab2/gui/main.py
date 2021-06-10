@@ -1,9 +1,11 @@
+import json
 import os
 import tkinter as tk
 from tkinter import ttk
 import numpy as np
 from pylab import cm, imshow, contour, clabel, colorbar, title, show
 
+import function
 import values
 import query
 import matplotlib.pyplot as plt
@@ -189,10 +191,7 @@ class GUI:
                                                           alpha=self.settings['alpha'], ng=self.settings['ng'])
         self.text_editor.delete('1.0', 'end')
         self.text_editor.insert(tk.END, query.load.json_func)
-        self.text_editor.insert(tk.END, '\n[\n')
-        for i in self.steps:
-            self.text_editor.insert(tk.END, str(i) + '\n')
-        self.text_editor.insert(tk.END, ']')
+        self.text_editor.insert(tk.END, query.load.json_steps)
         self.function.description = values.functions[self.functionId]
         self.center = (self.steps[-1][0][0], self.steps[-1][1][0])
         self.min_x_label['text'] = self.steps[-1].T
@@ -204,8 +203,15 @@ class GUI:
             self.paint_main_function()
 
     def paint_main_function(self):
+        if values.actions.index(self.current_action.get()) == 2:
+            func_str, dots_str = self.text_editor.get("1.0", 'end-1c').split('#')
+            func = json.loads(func_str)
+            self.function = function.Function(func['A']['data'], func['b']['data'], func['c'], func['x0']['data'])
+            self.steps = np.asarray(json.loads(dots_str))
+
         if not self.function or self.function.b.shape[0] != 2:
             return
+
         plt.cla()
         plt.clf()
         zoom = (int(self.zoom_entry.get()) ** 3)

@@ -29,4 +29,5 @@ def load(inp):
     func = Function(jsf['A']['data'], jsf['b']['data'], jsf['c'], x0=jsf['x0']['data'])
     steps = np.array([x['data'] for x in js['steps']])
     load.json_func = json.dumps(jsf, indent=4)
+    load.json_steps = json.dumps(steps.tolist(), indent=2)
     return func, steps
