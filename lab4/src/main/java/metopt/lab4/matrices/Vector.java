@@ -62,6 +62,10 @@ public class Vector {
         return DoubleStream.of(temp.data).sum();
     }
 
+    public FullMatrix mul(final Vector other) {
+        return toMatrix().mul(other.toMatrix().transpose());
+    }
+
     public Vector mul(final double k) {
         return new Vector(this).mulBy(k);
     }
@@ -104,6 +108,10 @@ public class Vector {
 
     public Vector negBy() {
         return mulBy(-1);
+    }
+
+    public FullMatrix toMatrix(){
+        return new FullMatrix(this);
     }
 
     @Override

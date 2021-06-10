@@ -47,6 +47,30 @@ public abstract class Matrix {
         return this;
     }
 
+    public FullMatrix mul(Matrix other) {
+        if (m != other.n) {
+            throw new IllegalArgumentException("Incompatible matrices.");
+        }
+        FullMatrix result = new FullMatrix(n, other.m);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < other.m; ++j) {
+                double c = 0.;
+                for (int k = 0; k < m; ++k) {
+                    c += get(i, k) * other.get(k, j);
+                }
+                result.set(i, j, c);
+            }
+        }
+        return result;
+    }
+
+    public Matrix negBy() {
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                set(i, j, -get(i, j));
+        return this;
+    }
+
     public Vector mul(final Vector v) {
         final int n = size();
         if (v.size() != n) {
