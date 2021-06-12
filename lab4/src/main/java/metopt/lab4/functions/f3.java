@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 import java.util.function.UnaryOperator;
 
-public class Function3 extends UnfunnyFunction {
+public class f3 extends UnfunnyFunction {
     private final static ToDoubleFunction<Vector> function = (x) ->
             Math.pow(Math.pow(x.x(), 2) + x.y() - 11, 2) +
                     Math.pow(x.x() + Math.pow(x.y(), 2) - 7, 2);
@@ -29,7 +29,7 @@ public class Function3 extends UnfunnyFunction {
             ))
     ));
 
-    public Function3() {
-        super(function, gradient, hessian, new Vector(List.of(-1.2, 1.)));
+    public f3() {
+        super(function, gradient, hessian, new Vector(List.of(-1.2, 1.)), "f3");
     }
 }

@@ -12,7 +12,7 @@ public class UnfunnyFunction implements FunI {
     private final UnaryOperator<Vector> gradient;
     private final Function<Vector, Matrix> hessian;
     private final String name;
-    private final Vector x0;
+    private Vector x0;
 
     public UnfunnyFunction(ToDoubleFunction<Vector> function,
                            UnaryOperator<Vector> gradient,
@@ -52,6 +52,11 @@ public class UnfunnyFunction implements FunI {
     @Override
     public Vector getX0() {
         return x0;
+    }
+
+    @Override
+    public void setX0(final Vector x0) {
+        this.x0 = x0;
     }
 
     @Override

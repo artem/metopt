@@ -10,7 +10,7 @@ public class QuadraticFunction implements FunI {
     final private Matrix A;
     final private Vector b;
     final private double c;
-    final private Vector x0;
+    private Vector x0;
     final private String name;
 
     public QuadraticFunction(final Matrix a, final Vector b, final double c, final Vector x0, final String name) {
@@ -43,6 +43,11 @@ public class QuadraticFunction implements FunI {
     @Override
     public Vector getX0() {
         return x0;
+    }
+
+    @Override
+    public void setX0(final Vector x0) {
+        this.x0 = x0;
     }
 
     @Override

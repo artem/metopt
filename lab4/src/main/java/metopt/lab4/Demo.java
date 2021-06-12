@@ -1,7 +1,7 @@
 package metopt.lab4;
 
 import metopt.lab4.functions.QuadraticFunction;
-import metopt.lab4.functions.Function1;
+import metopt.lab4.functions.f1;
 import metopt.lab4.functions.Sample1;
 import metopt.lab4.matrices.Vector;
 import metopt.lab4.methods.*;
@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 public class Demo {
     private static final double EPS = 1e-6;
     private static final List<QuadraticFunction> functions = List.of(
-            new Function1(),
+            new f1(),
             new Sample1()
     );
 
