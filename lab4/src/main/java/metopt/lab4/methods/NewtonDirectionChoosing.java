@@ -2,21 +2,22 @@ package metopt.lab4.methods;
 
 import metopt.lab4.Result;
 import metopt.lab4.Utils;
-import metopt.lab4.functions.QuadraticFunction;
+import metopt.lab4.functions.FunI;
 import metopt.lab4.matrices.Matrix;
 import metopt.lab4.matrices.Vector;
 
 public class NewtonDirectionChoosing implements Method {
-    public Result run(final QuadraticFunction function, final Vector x0, double eps) {
+    public Result run(final FunI function, final Vector x0, double eps) {
         Result result = new Result();
-        Vector x = x0;
-        result.addStep(x);
+        Vector x = new Vector(x0);
+        result.addPoint(x);
         Vector antiGrad = function.gradient(x).negBy();
         Vector finalAntiGrad = antiGrad;
         double alpha = SingleDimensionMethods.goldenRatio(z -> function.eval(x0.add(finalAntiGrad.mul(z))), eps, -20, 20);
         Vector p = antiGrad.mul(alpha);
         x.addBy(p);
-        result.addStep(x);
+        result.addPoint(x);
+        result.addStep(1, alpha, x, p, function.applyAsDouble(x));
         for (result.iterations = 2; true; result.iterations++) {
             Vector gradient = function.gradient(x);
             Matrix hessian = function.hessian(x);
@@ -30,7 +31,8 @@ public class NewtonDirectionChoosing implements Method {
             alpha = SingleDimensionMethods.goldenRatio(z -> function.eval(x.add(finalAntiGrad1.mul(z))), eps, -20, 20);
             p = antiGrad.mulBy(alpha);
             x.addBy(p);
-            result.addStep(x);
+            result.addPoint(x);
+            result.addStep(result.iterations, alpha, x, p, function.applyAsDouble(x));
             result.additional.add(alpha);
             if (p.norm() <= eps) {
                 result.x = x;
@@ -40,7 +42,12 @@ public class NewtonDirectionChoosing implements Method {
     }
 
     @Override
-    public String name() {
-        return "Метод ньютона с выбором направления";
+    public String getFullName() {
+        return "Метод ньютона с направлением спуска";
+    }
+
+    @Override
+    public String getShortName() {
+        return "descend";
     }
 }

@@ -3,6 +3,7 @@ package metopt.lab4.matrices;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 public class Vector {
@@ -20,7 +21,7 @@ public class Vector {
         this(d.stream().mapToDouble(Double::doubleValue).toArray());
     }
 
-    public Vector(final double[] d) {
+    public Vector(final double... d) {
         data = Arrays.copyOf(d, d.length);
     }
 
@@ -127,5 +128,18 @@ public class Vector {
         return "Vector{" +
                 "data=" + Arrays.toString(data) +
                 '}';
+    }
+
+    public String texView() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%.7f", data[0]));
+        Arrays.stream(data).skip(1).forEach(i -> sb.append(" & ").append(String.format("%.7f", i)));
+        return sb.toString();
+    }
+
+    public String pythonView() {
+        return "[" +
+                Arrays.stream(data).mapToObj(d -> String.format("[%.7f]", d)).collect(Collectors.joining(",")) +
+                "]";
     }
 }

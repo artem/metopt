@@ -4,7 +4,6 @@ import metopt.lab4.matrices.Matrix;
 import metopt.lab4.matrices.Vector;
 
 public class BFS extends QuasiAbstract {
-
     @Override
     public Matrix nextG(Matrix G, Vector dx, Vector dw) {
         Vector v = G.mul(dw);
@@ -19,7 +18,12 @@ public class BFS extends QuasiAbstract {
     }
 
     @Override
-    public String name() {
+    public String getFullName() {
         return "Метод Бройдена-Флетчера-Шенно";
+    }
+
+    @Override
+    public String getShortName() {
+        return "bfs";
     }
 }

@@ -4,7 +4,6 @@ import metopt.lab4.matrices.Matrix;
 import metopt.lab4.matrices.Vector;
 
 public class Powell extends QuasiAbstract {
-
     @Override
     public Matrix nextG(final Matrix G, final Vector dx, final Vector dw) {
         Vector dxt = dx.add(G.mul(dw));
@@ -13,7 +12,12 @@ public class Powell extends QuasiAbstract {
     }
 
     @Override
-    public String name() {
+    public String getFullName() {
         return "Метод Пауэлла";
+    }
+
+    @Override
+    public String getShortName() {
+        return "powell";
     }
 }
