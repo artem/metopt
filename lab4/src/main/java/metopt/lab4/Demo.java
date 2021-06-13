@@ -8,9 +8,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -109,8 +108,13 @@ public class Demo {
     }
 
     private static String startPointShort(final Vector startPoint, final double startValue) {
-        return String.format("        0 & %s & %.7f \\\\%n", startPoint.texView(), startValue);
+        return String.format("        0 & %s & %.7f \\\\%n", startPoint.texView(), startValue)
+                + HLINE;
     }
+
+    private static List<List<Integer>> iterations = Stream.generate((Supplier<ArrayList<Integer>>) ArrayList::new)
+                                                            .limit(4)
+                                                            .collect(Collectors.toList());
 
     private static void doTest(final double eps,
                                final int variant,
@@ -119,12 +123,16 @@ public class Demo {
         try (final BufferedWriter writer = Files.newBufferedWriter(Path.of("/home/td2r/Desktop/tmp/input.txt"))) {
             for (final Method method : methods) {
                 System.out.printf("\\subsection{%s}%n%n", method.getFullName());
+                int findex = -1;
                 for (final InputData inputData : inputDataList) {
+                    ++findex;
                     int index = 1;
                     for (final Vector x0 : inputData.points) {
                         final Result result = method.run(inputData.f, x0, eps);
                         final List<Step> steps = result.getSteps();
                         final List<Integer> indices = compressIndices(steps.size());
+
+                        iterations.get(findex).add(steps.size());
 
                         final boolean drawable = x0.size() <= 2;
 
@@ -194,7 +202,7 @@ public class Demo {
                         new Vector(1.94, -7.09),
                         new Vector(-9.53, 2.99)),
                 new InputData(new f4(),
-                        new Vector(0, 0, 0, 0),
+                        new Vector(100, 0, 0, 0),
                         new Vector(0, 10, 0, 10),
                         new Vector(15, 15, 15, 15)),
                 new InputData(new f5(),
@@ -210,5 +218,25 @@ public class Demo {
 
     public static void main(String[] args) {
         testQuasiNewtonsWithGiven(EPS);
+        System.out.println(
+                "\\begin{table}[H]\n" +
+                "    \\centering\n" +
+                "    \\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}\n" +
+                "        \\hline\n" +
+                "        Функция\n" +
+                "        & \\multicolumn{3}{c}{БФШ}\n" +
+                "        & \\multicolumn{3}{c}{Пауэлл}\n" +
+                "        & \\multicolumn{3}{c}{Ньютон} (ОС) \\\\\n" +
+                "        \\hline");
+        for (int i = 0; i < iterations.size(); ++i) {
+            System.out.println("        $f_" +
+                    (i + 1) +
+                    "$ & " +
+                    iterations.get(i).stream().map(String::valueOf).collect(Collectors.joining(" & ")) +
+                    " \\\\\n" +
+                    "        \\hline\n");
+        }
+        System.out.println("    \\end{tabular}\n" +
+                "\\end{table}\n");
     }
 }

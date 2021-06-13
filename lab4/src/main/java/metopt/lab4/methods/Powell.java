@@ -13,7 +13,7 @@ public class Powell extends QuasiAbstract {
 
     @Override
     public String getFullName() {
-        return "Метод Пауэлла";
+            return "Метод Пауэлла";
     }
 
     @Override

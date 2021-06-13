@@ -11,7 +11,7 @@ public class NewtonSingleDimensionalSearch implements Method {
         Result result = new Result();
         Vector x = new Vector(x0);
         result.addPoint(x);
-        for (result.iterations = 1; true; result.iterations++) {
+        for (result.iterations = 1; result.iterations <= 10_000; result.iterations++) {
             Vector gradient = function.gradient(x);
             Matrix hessian = function.hessian(x);
             Vector p = Utils.gauss(hessian, gradient.negBy());
@@ -25,6 +25,7 @@ public class NewtonSingleDimensionalSearch implements Method {
                 return result;
             }
         }
+        return result;
     }
 
     @Override
