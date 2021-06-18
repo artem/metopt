@@ -11,26 +11,16 @@ public class NewtonDirectionChoosing implements Method {
         Result result = new Result();
         Vector x = new Vector(x0);
         result.addPoint(x);
-        Vector antiGrad = function.gradient(x).negBy();
-        Vector finalAntiGrad = antiGrad;
-        double alpha = SingleDimensionMethods.goldenRatio(z -> function.eval(x0.add(finalAntiGrad.mul(z))), eps, -20, 20);
-        Vector p = antiGrad.mul(alpha);
-        x.addBy(p);
-        result.addPoint(x);
-        result.addStep(1, alpha, x, p, function.applyAsDouble(x));
-        for (result.iterations = 2; true; result.iterations++) {
+        for (result.iterations = 1; result.iterations <= 10_000; result.iterations++) {
             Vector gradient = function.gradient(x);
             Matrix hessian = function.hessian(x);
-            p = Utils.gauss(hessian, gradient.neg());
+            Vector p = Utils.gauss(hessian, gradient.negBy());
             if (p.scalar(gradient) < 0) {
-                antiGrad = p;
-            } else {
-                antiGrad = gradient.neg();
+                p = gradient.neg();
             }
-            Vector finalAntiGrad1 = antiGrad;
-            alpha = SingleDimensionMethods.goldenRatio(z -> function.eval(x.add(finalAntiGrad1.mul(z))), eps, -20, 20);
-            p = antiGrad.mulBy(alpha);
-            x.addBy(p);
+            final Vector finP = p;
+            double alpha = SingleDimensionMethods.goldenRatio(z -> function.eval(x.add(finP.mul(z))), eps, -20, 20);
+            x.addBy(p.mulBy(alpha));
             result.addPoint(x);
             result.addStep(result.iterations, alpha, x, p, function.applyAsDouble(x));
             result.additional.add(alpha);
@@ -39,6 +29,7 @@ public class NewtonDirectionChoosing implements Method {
                 return result;
             }
         }
+        return result;
     }
 
     @Override

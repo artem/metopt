@@ -139,7 +139,7 @@ public class Vector {
 
     public String pythonView() {
         return "[" +
-                Arrays.stream(data).mapToObj(d -> String.format("[%.7f]", d)).collect(Collectors.joining(",")) +
+                Arrays.stream(data).mapToObj(d -> String.format("[%.7f]", d).replace(',', '.')).collect(Collectors.joining(",")) +
                 "]";
     }
 }
